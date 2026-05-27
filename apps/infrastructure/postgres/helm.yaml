@@ -1,28 +1,49 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: postgres
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: postgresql
-    targetRevision: 15.x
-    helm:
-      values: |
-        auth:
-          username: dev
-          password: devpass
-          database: appdb
-
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: database
-
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+            database: appdb-dev
+            replicaCount: "1"
+          - env: qa
+            namespace: qa
+            database: appdb-qa
+            replicaCount: "1"
+          - env: prod
+            namespace: prod
+            database: appdb
+            replicaCount: "1"
+  template:
+    metadata:
+      name: postgres-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://charts.bitnami.com/bitnami
+        chart: postgresql
+        targetRevision: 15.x
+        helm:
+          values: |
+            auth:
+              username: app
+              password: apppass
+              database: {{database}}
+            primary:
+              replicaCount: {{replicaCount}}
+              persistence:
+                size: 8Gi
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,27 +1,43 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: kafka
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: kafka
-    targetRevision: 28.x
-    helm:
-      values: |
-        replicaCount: 1
-        zookeeper:
-          enabled: true
-
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: messaging
-
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+            replicaCount: "1"
+          - env: qa
+            namespace: qa
+            replicaCount: "1"
+          - env: prod
+            namespace: prod
+            replicaCount: "3"
+  template:
+    metadata:
+      name: kafka-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://charts.bitnami.com/bitnami
+        chart: kafka
+        targetRevision: 28.x
+        helm:
+          values: |
+            replicaCount: {{replicaCount}}
+            zookeeper:
+              enabled: true
+            persistence:
+              size: 8Gi
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
