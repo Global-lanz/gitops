@@ -2,5 +2,7 @@ resources:
   - namespaces/dev.yaml
   - namespaces/qa.yaml
   - namespaces/prod.yaml
+  - namespaces/tools.yaml
   - apps/infrastructure/postgres/helm.yaml
   - apps/infrastructure/kafka/helm.yaml
+  - apps/tools/pgadmin
