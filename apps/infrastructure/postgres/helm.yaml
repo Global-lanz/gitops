@@ -29,19 +29,23 @@ spec:
         chart: postgresql
         targetRevision: 15.x
         helm:
-          values: |
-            auth:
-              username: app
-              password: apppass
-              database: {{database}}
-            image:
-              registry: docker.io
-              repository: bitnami/postgresql
-              tag: 17.6.0-debian-12-r4
-            primary:
-              replicaCount: {{replicaCount}}
-              persistence:
-                size: 8Gi
+          parameters:
+            - name: auth.username
+              value: app
+            - name: auth.password
+              value: apppass
+            - name: auth.database
+              value: "{{database}}"
+            - name: image.registry
+              value: docker.io
+            - name: image.repository
+              value: bitnami/postgresql
+            - name: image.tag
+              value: 17.6.0-debian-12-r4
+            - name: primary.replicaCount
+              value: "{{replicaCount}}"
+            - name: primary.persistence.size
+              value: 8Gi
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{namespace}}"
