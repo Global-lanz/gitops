@@ -21,7 +21,7 @@ spec:
       source:
         repoURL: https://github.com/Global-lanz/gitops.git
         targetRevision: main
-        path: gitops/apps/blueprint/overlays/{{env}}
+        path: apps/blueprint/overlays/{{env}}
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{namespace}}"
