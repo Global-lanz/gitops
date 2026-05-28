@@ -15,3 +15,13 @@ spec:
                 name: blueprint-frontend
                 port:
                   number: 80
+    - host: blueprint-qa.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-frontend
+                port:
+                  number: 80
