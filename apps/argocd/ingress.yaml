@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: argocd-server
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    traefik.ingress.kubernetes.io/service.serversscheme: https
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: argocd.local.dev
       http:

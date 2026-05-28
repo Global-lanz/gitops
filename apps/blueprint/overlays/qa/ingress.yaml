@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: blueprint-frontend
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: blueprint-qa.local.dev
       http:
