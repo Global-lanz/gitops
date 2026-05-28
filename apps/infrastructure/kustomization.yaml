@@ -1,0 +1,3 @@
+resources:
+  - postgres/helm.yaml
+  - kafka/helm.yaml

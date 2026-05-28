@@ -9,11 +9,11 @@ spec:
   source:
     repoURL: https://github.com/Global-lanz/gitops.git
     targetRevision: main
-    path: infrastructure
+    path: gitops/apps/infrastructure
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: infrastructure
+    namespace: argocd
 
   syncPolicy:
     automated:
