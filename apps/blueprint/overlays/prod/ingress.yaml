@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: blueprint-prod.local.dev
+    - host: blueprint-prod.local
       http:
         paths:
           - path: /

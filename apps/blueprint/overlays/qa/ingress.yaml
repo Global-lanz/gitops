@@ -5,17 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: blueprint-qa.local.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: blueprint-frontend
-                port:
-                  number: 80
-    - host: blueprint-qa.127.0.0.1.nip.io
+    - host: blueprint-qa.local
       http:
         paths:
           - path: /
