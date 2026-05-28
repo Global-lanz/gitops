@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Global-lanz/gitops.git
     targetRevision: main
-    path: gitops/apps/infrastructure
+    path: apps/infrastructure
 
   destination:
     server: https://kubernetes.default.svc
@@ -19,6 +19,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
-
-  syncOptions:
-    - CreateNamespace=true
+    syncOptions:
+      - CreateNamespace=true
