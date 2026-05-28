@@ -4,9 +4,9 @@ metadata:
   name: blueprint-config
 data:
   PORT: "3333"
-  API_URL: https://blueprint-backend:3333
-  BACKEND_URL: https://blueprint-backend:3333
-  FRONTEND_URL: https://blueprint-dev.local:80
+  API_URL: https://api.blueprint-dev.local
+  BACKEND_URL: https://api.blueprint-dev.local
+  FRONTEND_URL: https://blueprint-dev.local
   S3_ENDPOINT: http://minio.tools.svc.cluster.local:9000
   S3_BUCKET: blueprint
   S3_PUBLIC_URL: http://minio.tools.svc.cluster.local:9000

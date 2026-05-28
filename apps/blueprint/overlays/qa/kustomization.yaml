@@ -4,3 +4,4 @@ resources:
   - configmap.yaml
   - secret.yaml
   - ingress.yaml
+  - backend-ingress.yaml
