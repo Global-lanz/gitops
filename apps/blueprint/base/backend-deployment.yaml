@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blueprint-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blueprint-backend
+  template:
+    metadata:
+      labels:
+        app: blueprint-backend
+    spec:
+      containers:
+        - name: blueprint-backend
+          image: maiconlanzendorf/blueprint-backend:1.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3333
+          envFrom:
+            - configMapRef:
+                name: blueprint-config
+            - secretRef:
+                name: blueprint-secret
+          readinessProbe:
+            tcpSocket:
+              port: 3333
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3333
+            initialDelaySeconds: 30
+            periodSeconds: 20
