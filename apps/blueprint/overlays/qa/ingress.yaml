@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blueprint-frontend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: blueprint-qa.local.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-frontend
+                port:
+                  number: 80

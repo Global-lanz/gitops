@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Global-lanz/gitops.git
     targetRevision: main
-    path: argocd-apps
+    path: gitops/argocd-apps
 
   destination:
     server: https://kubernetes.default.svc

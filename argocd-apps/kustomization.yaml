@@ -1,3 +1,5 @@
 resources:
   - infrastructure.yaml
   - blueprint.yaml
+  - pgadmin.yaml
+  - argocd.yaml
