@@ -1,0 +1,6 @@
+namespace: dev
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.yaml
+  - ingress.yaml

@@ -1,26 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blueprint-frontend
+  name: blueprint-auth-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blueprint-frontend
+      app: blueprint-auth-frontend
   template:
     metadata:
       labels:
-        app: blueprint-frontend
+        app: blueprint-auth-frontend
     spec:
       containers:
-        - name: blueprint-frontend
-          image: maiconlanzendorf/blueprint-frontend:1.3.0
+        - name: blueprint-auth-frontend
+          image: maiconlanzendorf/blueprint-auth-frontend:0.3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
-          envFrom:
-            - configMapRef:
-                name: blueprint-config
+          env:
+            # nginx proxies /api -> the in-cluster blueprint-auth service (:3400)
+            - name: API_BASE_URL
+              value: /api
           readinessProbe:
             httpGet:
               path: /

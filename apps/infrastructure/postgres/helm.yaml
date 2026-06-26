@@ -46,6 +46,17 @@ spec:
               value: "{{replicaCount}}"
             - name: primary.persistence.size
               value: 8Gi
+          # Create a dedicated database per app on the same server (each app has
+          # its own schema, e.g. all define a `User` table, so they can't share
+          # `appdb`). Runs only on FIRST init (empty data dir); for an already
+          # initialized volume create them manually — see README/notes.
+          values: |
+            primary:
+              initdb:
+                scripts:
+                  01-extra-databases.sql: |
+                    CREATE DATABASE blueprint_auth OWNER app;
+                    CREATE DATABASE chatdb OWNER app;
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{namespace}}"

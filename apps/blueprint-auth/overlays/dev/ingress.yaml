@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blueprint-auth-frontend
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: auth.blueprint-dev.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-auth-frontend
+                port:
+                  number: 80
+    - host: auth.blueprint-dev.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-auth-frontend
+                port:
+                  number: 80

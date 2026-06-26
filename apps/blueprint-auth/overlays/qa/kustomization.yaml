@@ -1,0 +1,6 @@
+namespace: qa
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.yaml
+  - ingress.yaml

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blueprint-auth
+spec:
+  selector:
+    app: blueprint-auth
+  ports:
+    - name: http
+      port: 3400
+      targetPort: 3400

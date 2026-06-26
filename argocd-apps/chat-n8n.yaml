@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: chat-n8n
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+          - env: qa
+            namespace: qa
+          - env: prod
+            namespace: prod
+  template:
+    metadata:
+      name: chat-n8n-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Global-lanz/gitops.git
+        targetRevision: main
+        path: apps/chat-n8n/overlays/{{env}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-n8n-config
+data:
+  # --- Backend ---
+  PORT: "3000"
+  NODE_ENV: production
+  APP_ENVIRONMENT: production
+  BOT_NAME: NorteIA
+  AUTH_MODE: external
+  MODULE_KEY: chat
+  AUTH_BASE_URL: http://blueprint-auth:3400
+  AUTH_PORTAL_URL: https://auth.blueprint-prod.local
+  ALLOWED_ORIGINS: https://chat-prod.local,https://chat-prod.127.0.0.1.nip.io
+  N8N_WEBHOOK_URL: https://n8n-prod.local/webhook/chat
+  N8N_EMAIL_WEBHOOK_URL: https://n8n-prod.local/webhook/welcome-email
+  # --- Frontend (read at container start -> env-config.js) ---
+  API_BASE_URL: https://api.chat-prod.local

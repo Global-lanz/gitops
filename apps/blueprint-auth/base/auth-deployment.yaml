@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blueprint-backend
+  name: blueprint-auth
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blueprint-backend
+      app: blueprint-auth
   template:
     metadata:
       labels:
-        app: blueprint-backend
+        app: blueprint-auth
     spec:
       containers:
-        - name: blueprint-backend
-          image: maiconlanzendorf/blueprint-backend:1.3.0
+        - name: blueprint-auth
+          image: maiconlanzendorf/blueprint-auth:0.2.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3333
+            - containerPort: 3400
           envFrom:
             - configMapRef:
-                name: blueprint-config
+                name: blueprint-auth-config
             - secretRef:
-                name: blueprint-secret
+                name: blueprint-auth-secret
           readinessProbe:
             tcpSocket:
-              port: 3333
+              port: 3400
             initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
             tcpSocket:
-              port: 3333
+              port: 3400
             initialDelaySeconds: 30
             periodSeconds: 20

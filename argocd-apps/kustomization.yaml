@@ -1,5 +1,7 @@
 resources:
   - infrastructure.yaml
   - blueprint.yaml
+  - blueprint-auth.yaml
+  - chat-n8n.yaml
   - pgadmin.yaml
   - argocd.yaml

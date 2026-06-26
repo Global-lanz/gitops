@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blueprint-auth-config
+data:
+  PORT: "3400"
+  NODE_ENV: production
+  JWT_ACCESS_TTL: "1h"
+  JWT_REFRESH_TTL: "30d"
+  FRONTEND_URL: https://auth.blueprint-prod.local
+  SEED_ADMIN_EMAIL: admin@blueprint-auth.local
+  SEED_ADMIN_NAME: Auth Admin
+  SEED_MODULES: "chat:Chat IA:365,blueprint:BluePrint:365"
+  SEED_MODULE_URLS: "chat:https://chat-prod.local,blueprint:https://blueprint-prod.local"
+  SEED_MODULE_ICONS: "chat:💬,blueprint:📐"
+  SMTP_HOST: ""
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
+  SMTP_FROM: "Auth <no-reply@blueprint-auth.local>"

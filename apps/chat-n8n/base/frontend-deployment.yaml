@@ -1,26 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blueprint-frontend
+  name: n8n-chat-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blueprint-frontend
+      app: n8n-chat-frontend
   template:
     metadata:
       labels:
-        app: blueprint-frontend
+        app: n8n-chat-frontend
     spec:
       containers:
-        - name: blueprint-frontend
-          image: maiconlanzendorf/blueprint-frontend:1.3.0
+        - name: n8n-chat-frontend
+          image: maiconlanzendorf/n8n-chat-frontend:1.4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
+          # The Angular app reads API_BASE_URL / AUTH_PORTAL_URL at container
+          # start (docker-entrypoint -> env-config.js). Pulled from the shared
+          # config; backend-only keys are ignored by nginx.
           envFrom:
             - configMapRef:
-                name: blueprint-config
+                name: chat-n8n-config
           readinessProbe:
             httpGet:
               path: /

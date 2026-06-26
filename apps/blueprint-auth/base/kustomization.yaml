@@ -1,0 +1,5 @@
+resources:
+  - auth-deployment.yaml
+  - auth-service.yaml
+  - portal-deployment.yaml
+  - portal-service.yaml
