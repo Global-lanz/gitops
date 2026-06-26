@@ -7,6 +7,8 @@ data:
   API_URL: https://api.blueprint-prod.local
   BACKEND_URL: https://api.blueprint-prod.local
   FRONTEND_URL: https://blueprint-prod.local
+  # Central auth portal — used for login redirect and the /logout (SSO) handoff.
+  AUTH_PORTAL_URL: https://auth.blueprint-prod.local
   S3_ENDPOINT: http://minio.tools.svc.cluster.local:9000
   S3_BUCKET: blueprint
   S3_PUBLIC_URL: http://minio.tools.svc.cluster.local:9000
