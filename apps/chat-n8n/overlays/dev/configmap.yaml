@@ -12,9 +12,9 @@ data:
   MODULE_KEY: chat
   # In-cluster URL of the central auth service (same namespace)
   AUTH_BASE_URL: http://blueprint-auth:3400
-  AUTH_PORTAL_URL: https://auth.blueprint-dev.local
-  ALLOWED_ORIGINS: https://chat-dev.local,https://chat-dev.127.0.0.1.nip.io
+  AUTH_PORTAL_URL: http://auth.blueprint-dev.local
+  ALLOWED_ORIGINS: http://chat-dev.local,http://chat-dev.127.0.0.1.nip.io
   N8N_WEBHOOK_URL: https://n8n-dev.local/webhook/chat
   N8N_EMAIL_WEBHOOK_URL: https://n8n-dev.local/webhook/welcome-email
   # --- Frontend (read at container start -> env-config.js) ---
-  API_BASE_URL: https://api.chat-dev.local
+  API_BASE_URL: http://api.chat-dev.local
