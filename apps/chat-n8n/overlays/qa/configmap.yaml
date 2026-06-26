@@ -11,9 +11,9 @@ data:
   AUTH_MODE: external
   MODULE_KEY: chat
   AUTH_BASE_URL: http://blueprint-auth:3400
-  AUTH_PORTAL_URL: https://auth.blueprint-qa.local
-  ALLOWED_ORIGINS: https://chat-qa.local,https://chat-qa.127.0.0.1.nip.io
+  AUTH_PORTAL_URL: http://auth.blueprint-qa.local
+  ALLOWED_ORIGINS: http://chat-qa.local,http://chat-qa.127.0.0.1.nip.io
   N8N_WEBHOOK_URL: https://n8n-qa.local/webhook/chat
   N8N_EMAIL_WEBHOOK_URL: https://n8n-qa.local/webhook/welcome-email
   # --- Frontend (read at container start -> env-config.js) ---
-  API_BASE_URL: https://api.chat-qa.local
+  API_BASE_URL: http://api.chat-qa.local
