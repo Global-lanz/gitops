@@ -5,20 +5,13 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - env: dev
-            namespace: dev
-            database: appdb-dev
-            replicaCount: "1"
-          - env: qa
-            namespace: qa
-            database: appdb-qa
-            replicaCount: "1"
-          - env: prod
-            namespace: prod
-            database: appdb
-            replicaCount: "1"
+    # Active environments come from gitops/envs/*.yaml — add/remove a file there
+    # to enable/disable an env across ALL apps at once.
+    - git:
+        repoURL: https://github.com/Global-lanz/gitops.git
+        revision: main
+        files:
+          - path: "envs/*.yaml"
   template:
     metadata:
       name: postgres-{{env}}
@@ -43,7 +36,7 @@ spec:
             - name: image.tag
               value: latest
             - name: primary.replicaCount
-              value: "{{replicaCount}}"
+              value: "{{postgresReplicas}}"
             - name: primary.persistence.size
               value: 8Gi
           # Create a dedicated database per app on the same server (each app has

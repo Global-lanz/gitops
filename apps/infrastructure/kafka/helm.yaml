@@ -5,17 +5,13 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - env: dev
-            namespace: dev
-            replicaCount: "1"
-          - env: qa
-            namespace: qa
-            replicaCount: "1"
-          - env: prod
-            namespace: prod
-            replicaCount: "3"
+    # Active environments come from gitops/envs/*.yaml — add/remove a file there
+    # to enable/disable an env across ALL apps at once.
+    - git:
+        repoURL: https://github.com/Global-lanz/gitops.git
+        revision: main
+        files:
+          - path: "envs/*.yaml"
   template:
     metadata:
       name: kafka-{{env}}
@@ -27,7 +23,7 @@ spec:
         targetRevision: 28.x
         helm:
           values: |
-            replicaCount: {{replicaCount}}
+            replicaCount: {{kafkaReplicas}}
             zookeeper:
               enabled: true
             persistence:

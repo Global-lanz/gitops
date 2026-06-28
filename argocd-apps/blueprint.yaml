@@ -5,14 +5,13 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - env: dev
-            namespace: dev
-          - env: qa
-            namespace: qa
-          - env: prod
-            namespace: prod
+    # Active environments come from gitops/envs/*.yaml — add/remove a file there
+    # to enable/disable an env across ALL apps at once.
+    - git:
+        repoURL: https://github.com/Global-lanz/gitops.git
+        revision: main
+        files:
+          - path: "envs/*.yaml"
   template:
     metadata:
       name: blueprint-{{env}}
