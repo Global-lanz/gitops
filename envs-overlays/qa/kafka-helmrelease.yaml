@@ -18,9 +18,29 @@ spec:
       enabled: false
     zookeeper:
       enabled: true
+      image:
+        tag: latest
+      heapSize: 256
+      resources:
+        requests:
+          cpu: 50m
+          memory: 256Mi
+        limits:
+          cpu: 200m
+          memory: 512Mi
     controller:
       replicaCount: 0
     broker:
       replicaCount: 1
+      heapOpts: "-Xmx384m -Xms384m"
+      resources:
+        requests:
+          cpu: 80m
+          memory: 512Mi
+        limits:
+          cpu: 250m
+          memory: 768Mi
+    image:
+      tag: latest
     persistence:
       size: 8Gi

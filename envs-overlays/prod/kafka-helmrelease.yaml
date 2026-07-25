@@ -18,9 +18,13 @@ spec:
       enabled: false
     zookeeper:
       enabled: true
+      image:
+        tag: latest
     controller:
       replicaCount: 0
     broker:
       replicaCount: 3
+    image:
+      tag: latest
     persistence:
       size: 8Gi
