@@ -9,4 +9,7 @@ resources:
   - ../../apps/guia/overlays/qa
   - ../../apps/n8n/overlays/qa
   - postgres-helmrelease.yaml
-  - kafka-helmrelease.yaml
+  # kafka-helmrelease.yaml disabled: bitnami/kafka and bitnami/zookeeper images
+  # are no longer published on Docker Hub (even the `latest` tag 404s) and the
+  # 1-vCPU VPS doesn't have headroom to try alternate images/KRaft mode right now.
+  # - kafka-helmrelease.yaml
