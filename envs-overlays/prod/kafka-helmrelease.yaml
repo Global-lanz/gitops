@@ -14,8 +14,13 @@ spec:
         name: bitnami
         namespace: flux-system
   values:
-    replicaCount: 3
+    kraft:
+      enabled: false
     zookeeper:
       enabled: true
+    controller:
+      replicaCount: 0
+    broker:
+      replicaCount: 3
     persistence:
       size: 8Gi
