@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - gitrepository.yaml
+  - flux-kustomization-system.yaml
+  # always-on, not environment-gated
+  - flux-kustomization-infrastructure.yaml
+  - flux-kustomization-tools.yaml
+  # environment specific reconciliation — comment/uncomment to disable/enable
+  - flux-kustomization-dev.yaml
+  - flux-kustomization-qa.yaml
+  - flux-kustomization-prod.yaml

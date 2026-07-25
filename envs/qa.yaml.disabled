@@ -1,5 +1,0 @@
-env: qa
-namespace: qa
-database: appdb-qa
-postgresReplicas: "1"
-kafkaReplicas: "1"

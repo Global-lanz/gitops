@@ -1,3 +1,2 @@
 resources:
-  - postgres/helm.yaml
-  - kafka/helm.yaml
+  - helmrepository.yaml

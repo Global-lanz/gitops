@@ -1,0 +1,6 @@
+resources:
+  - n8n-statefulset.yaml
+  - n8n-service.yaml
+  - n8n-worker-deployment.yaml
+  - redis-deployment.yaml
+  - redis-service.yaml

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: n8n
+spec:
+  serviceName: n8n
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      containers:
+        - name: n8n
+          image: docker.n8n.io/n8nio/n8n
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5678
+          envFrom:
+            - configMapRef:
+                name: n8n-config
+            - secretRef:
+                name: n8n-secret
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
+          readinessProbe:
+            tcpSocket:
+              port: 5678
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 5678
+            initialDelaySeconds: 30
+            periodSeconds: 20
+  volumeClaimTemplates:
+    - metadata:
+        name: n8n-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi

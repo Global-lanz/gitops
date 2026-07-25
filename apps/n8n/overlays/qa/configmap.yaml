@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n8n-config
+data:
+  N8N_HOST: n8n-qa.ionflux.cloud
+  N8N_PORT: "5678"
+  N8N_PROTOCOL: http
+  WEBHOOK_URL: http://n8n-qa.ionflux.cloud/
+  DB_TYPE: postgresdb
+  DB_POSTGRESDB_HOST: postgres-qa-postgresql
+  DB_POSTGRESDB_PORT: "5432"
+  DB_POSTGRESDB_DATABASE: n8ndb
+  DB_POSTGRESDB_USER: app
+  NODE_ENV: production
+  GENERIC_TIMEZONE: America/Sao_Paulo
+  N8N_RUNNERS_ENABLED: "true"
+  EXECUTIONS_MODE: queue
+  QUEUE_BULL_REDIS_HOST: redis
+  QUEUE_BULL_REDIS_PORT: "6379"
+  OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS: "true"
+  N8N_EMAIL_MODE: smtp
+  N8N_SMTP_HOST: smtp.gmail.com
+  N8N_SMTP_SENDER: qa-n8n@example.com
+  NODES_EXCLUDE: "[]"

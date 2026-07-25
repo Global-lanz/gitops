@@ -1,0 +1,35 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: postgres-prod
+  namespace: prod
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: postgresql
+      version: "15.x"
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  values:
+    auth:
+      username: app
+      password: apppass
+      database: blueprint
+    image:
+      registry: docker.io
+      repository: bitnami/postgresql
+      tag: latest
+    primary:
+      replicaCount: 1
+      persistence:
+        size: 8Gi
+      initdb:
+        scripts:
+          01-extra-databases.sql: |
+            CREATE DATABASE blueprint_auth OWNER app;
+            CREATE DATABASE norteiadb OWNER app;
+            CREATE DATABASE guiadb OWNER app;
+            CREATE DATABASE n8ndb OWNER app;

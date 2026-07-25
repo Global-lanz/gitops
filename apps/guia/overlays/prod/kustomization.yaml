@@ -1,0 +1,7 @@
+namespace: prod
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.enc.yaml
+  - ingress.yaml
+  - backend-ingress.yaml

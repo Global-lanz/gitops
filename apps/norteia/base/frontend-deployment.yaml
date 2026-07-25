@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: norteia-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: norteia-frontend
+  template:
+    metadata:
+      labels:
+        app: norteia-frontend
+    spec:
+      containers:
+        - name: norteia-frontend
+          # Product image is still published as n8n-chat-frontend upstream.
+          image: maiconlanzendorf/n8n-chat-frontend:1.4.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          # The Angular app reads API_BASE_URL / AUTH_PORTAL_URL at container
+          # start (docker-entrypoint -> env-config.js). Pulled from the shared
+          # config; backend-only keys are ignored by nginx.
+          envFrom:
+            - configMapRef:
+                name: norteia-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 20

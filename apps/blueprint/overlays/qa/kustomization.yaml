@@ -2,6 +2,6 @@ namespace: qa
 resources:
   - ../../base
   - configmap.yaml
-  - secret.yaml
+  - secret.enc.yaml
   - ingress.yaml
   - backend-ingress.yaml

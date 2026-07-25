@@ -4,4 +4,4 @@ metadata:
   name: tools
   labels:
     environment: tools
-    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/managed-by: flux

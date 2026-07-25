@@ -1,0 +1,7 @@
+creation_rules:
+  - path_regex: apps[\\/].*[\\/]overlays[\\/].*[\\/]secret\.enc\.yaml$
+    encrypted_regex: ^(data|stringData)$
+    age: age16l29n9xvgd3ntzl70lkrfgfnkjx84u048qqewmesw00h98ucwpyqskgxq6
+  - path_regex: apps[\\/].*[\\/]secret\.enc\.yaml$
+    encrypted_regex: ^(data|stringData)$
+    age: age16l29n9xvgd3ntzl70lkrfgfnkjx84u048qqewmesw00h98ucwpyqskgxq6

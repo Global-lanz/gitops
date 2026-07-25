@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: pgadmin.local
+    - host: pgadmin-k8s.ionflux.cloud
       http:
         paths:
           - path: /

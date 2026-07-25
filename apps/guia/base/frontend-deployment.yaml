@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guia-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guia-frontend
+  template:
+    metadata:
+      labels:
+        app: guia-frontend
+    spec:
+      containers:
+        - name: guia-frontend
+          image: maiconlanzendorf/n8n-chat-frontend:1.3.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          # nginx entrypoint generates env-config.js from API_BASE_URL at start.
+          envFrom:
+            - configMapRef:
+                name: guia-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 20

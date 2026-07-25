@@ -1,6 +1,4 @@
 resources:
-  - namespaces/dev.yaml
-  # - namespaces/qa.yaml
-  # - namespaces/prod.yaml
   - namespaces/tools.yaml
-  - argocd-apps/root.yaml
+  - flux/gitrepository.yaml
+  - flux/flux-kustomization-system.yaml

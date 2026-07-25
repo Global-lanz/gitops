@@ -7,11 +7,11 @@ data:
   NODE_ENV: production
   JWT_ACCESS_TTL: "1h"
   JWT_REFRESH_TTL: "30d"
-  FRONTEND_URL: https://auth.blueprint-prod.local
+  FRONTEND_URL: https://auth.blueprint.ionflux.cloud
   SEED_ADMIN_EMAIL: admin@blueprint-auth.local
   SEED_ADMIN_NAME: Auth Admin
   SEED_MODULES: "chat:Chat IA:365,blueprint:BluePrint:365"
-  SEED_MODULE_URLS: "chat:https://chat-prod.local,blueprint:https://blueprint-prod.local"
+  SEED_MODULE_URLS: "chat:https://guia.ionflux.cloud,blueprint:https://blueprint.ionflux.cloud"
   SEED_MODULE_ICONS: "chat:💬,blueprint:📐"
   SMTP_HOST: ""
   SMTP_PORT: "587"

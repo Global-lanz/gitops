@@ -1,5 +1,0 @@
-env: dev
-namespace: dev
-database: appdb-dev
-postgresReplicas: "1"
-kafkaReplicas: "1"

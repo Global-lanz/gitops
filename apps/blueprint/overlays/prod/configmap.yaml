@@ -4,11 +4,11 @@ metadata:
   name: blueprint-config
 data:
   PORT: "3333"
-  API_URL: https://api.blueprint-prod.local
-  BACKEND_URL: https://api.blueprint-prod.local
-  FRONTEND_URL: https://blueprint-prod.local
+  API_URL: https://api.blueprint.ionflux.cloud
+  BACKEND_URL: https://api.blueprint.ionflux.cloud
+  FRONTEND_URL: https://blueprint.ionflux.cloud
   # Central auth portal — used for login redirect and the /logout (SSO) handoff.
-  AUTH_PORTAL_URL: https://auth.blueprint-prod.local
+  AUTH_PORTAL_URL: https://auth.blueprint.ionflux.cloud
   S3_ENDPOINT: http://minio.tools.svc.cluster.local:9000
   S3_BUCKET: blueprint
   S3_PUBLIC_URL: http://minio.tools.svc.cluster.local:9000

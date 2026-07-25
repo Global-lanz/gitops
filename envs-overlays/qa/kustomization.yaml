@@ -1,0 +1,12 @@
+# Aggregates every app + per-env infra for `qa` into one path, so a single
+# Flux Kustomization (flux/flux-kustomization-qa.yaml) can sync the whole
+# environment. Toggling `qa` on/off = adding/removing that Flux Kustomization.
+resources:
+  - namespace.yaml
+  - ../../apps/blueprint/overlays/qa
+  - ../../apps/blueprint-auth/overlays/qa
+  - ../../apps/norteia/overlays/qa
+  - ../../apps/guia/overlays/qa
+  - ../../apps/n8n/overlays/qa
+  - postgres-helmrelease.yaml
+  - kafka-helmrelease.yaml

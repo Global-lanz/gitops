@@ -1,0 +1,12 @@
+# Aggregates every app + per-env infra for `dev` into one path, so a single
+# Flux Kustomization (flux/flux-kustomization-dev.yaml) can sync the whole
+# environment. Toggling `dev` on/off = adding/removing that Flux Kustomization.
+resources:
+  - namespace.yaml
+  - ../../apps/blueprint/overlays/dev
+  - ../../apps/blueprint-auth/overlays/dev
+  - ../../apps/norteia/overlays/dev
+  - ../../apps/guia/overlays/dev
+  - ../../apps/n8n/overlays/dev
+  - postgres-helmrelease.yaml
+  - kafka-helmrelease.yaml

@@ -1,5 +1,0 @@
-env: prod
-namespace: prod
-database: appdb
-postgresReplicas: "1"
-kafkaReplicas: "3"

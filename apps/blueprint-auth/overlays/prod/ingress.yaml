@@ -5,17 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: auth.blueprint-prod.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: blueprint-auth-frontend
-                port:
-                  number: 80
-    - host: auth.blueprint-prod.127.0.0.1.nip.io
+    - host: auth.blueprint.ionflux.cloud
       http:
         paths:
           - path: /

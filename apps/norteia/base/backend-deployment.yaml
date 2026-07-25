@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: norteia-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: norteia-backend
+  template:
+    metadata:
+      labels:
+        app: norteia-backend
+    spec:
+      containers:
+        - name: norteia-backend
+          # Product image is still published as n8n-chat-backend upstream.
+          image: maiconlanzendorf/n8n-chat-backend:1.4.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: norteia-config
+            - secretRef:
+                name: norteia-secret
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 20

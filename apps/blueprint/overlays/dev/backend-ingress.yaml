@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: api.blueprint-dev.local
+    - host: api.blueprint-dev.ionflux.cloud
       http:
         paths:
           - path: /

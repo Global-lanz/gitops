@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: norteia-backend
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: api.norteia-dev.ionflux.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: norteia-backend
+                port:
+                  number: 3000
