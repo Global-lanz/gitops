@@ -5,3 +5,11 @@ resources:
   - secret.enc.yaml
   - ingress.yaml
   - backend-ingress.yaml
+# Pin da versão promovida pro QA. dev acompanha o base direto (sempre mais
+# novo); qa/prod só avançam quando alguém trocar a tag aqui manualmente,
+# depois de testar em ambientes mais baixos.
+images:
+  - name: maiconlanzendorf/blueprint-backend
+    newTag: "1.4.0"
+  - name: maiconlanzendorf/blueprint-frontend
+    newTag: "1.3.2"

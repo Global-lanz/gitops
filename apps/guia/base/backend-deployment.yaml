@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: guia-backend
-          image: maiconlanzendorf/n8n-chat-backend:1.3.0
+          image: maiconlanzendorf/n8n-chat-backend:1.4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

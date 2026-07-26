@@ -5,3 +5,12 @@ resources:
   - secret.enc.yaml
   - ingress.yaml
   - backend-ingress.yaml
+# Pin da versão promovida pro prod. Fica intencionalmente atrás do base (que
+# já subiu pra 1.4.0 pro dev) até ser testada em qa e promovida aqui
+# manualmente. Escopado só ao guia — não afeta outros apps que usem a mesma
+# imagem base (ex: norteia).
+images:
+  - name: maiconlanzendorf/n8n-chat-backend
+    newTag: "1.4.0"
+  - name: maiconlanzendorf/n8n-chat-frontend
+    newTag: "1.4.0"

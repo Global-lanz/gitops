@@ -4,3 +4,11 @@ resources:
   - configmap.yaml
   - secret.enc.yaml
   - ingress.yaml
+# Pin da versão promovida pro QA. dev acompanha o base direto (sempre mais
+# novo); qa/prod só avançam quando alguém trocar a tag aqui manualmente,
+# depois de testar em ambientes mais baixos.
+images:
+  - name: maiconlanzendorf/blueprint-auth
+    newTag: "0.2.0"
+  - name: maiconlanzendorf/blueprint-auth-frontend
+    newTag: "0.3.0"
