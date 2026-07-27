@@ -7,7 +7,6 @@ data:
   NODE_ENV: production
   APP_ENVIRONMENT: qa
   AUTH_MODE: external
-  MODULE_KEY: chat
   AUTH_BASE_URL: http://blueprint-auth:3400
   AUTH_PORTAL_URL: http://auth.blueprint-qa.ionflux.cloud
   ALLOWED_ORIGINS: http://guia-qa.ionflux.cloud
