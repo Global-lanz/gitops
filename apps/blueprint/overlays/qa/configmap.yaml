@@ -19,3 +19,4 @@ data:
   SMTP_HOST: smtp-qa.local
   SMTP_PORT: "587"
   SMTP_FROM: blueprint-qa@local.dev
+  MODULE_KEY: blueprint

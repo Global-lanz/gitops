@@ -13,3 +13,4 @@ data:
   ALLOWED_ORIGINS: http://guia-qa.ionflux.cloud
   N8N_WEBHOOK_URL: https://n8n-qa.ionflux.cloud/webhook/guia
   API_BASE_URL: http://api.guia-qa.ionflux.cloud
+  MODULE_KEY: guia
