@@ -9,7 +9,7 @@ data:
   AUTH_MODE: external
   AUTH_BASE_URL: http://blueprint-auth:3400
   AUTH_PORTAL_URL: http://auth.blueprint-qa.ionflux.cloud
-  ALLOWED_ORIGINS: http://guia-qa.ionflux.cloud
+  ALLOWED_ORIGINS: https://guia-qa.ionflux.cloud
   N8N_WEBHOOK_URL: https://n8n-qa.ionflux.cloud/webhook/guia
-  API_BASE_URL: http://api.guia-qa.ionflux.cloud
+  API_BASE_URL: https://api.guia-qa.ionflux.cloud
   MODULE_KEY: guia
