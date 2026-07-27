@@ -13,3 +13,27 @@ resources:
   # are no longer published on Docker Hub (even the `latest` tag 404s) and the
   # 1-vCPU VPS doesn't have headroom to try alternate images/KRaft mode right now.
   # - kafka-helmrelease.yaml
+
+# Scaled to 0 in qa only (norteia is the app actively being debugged; these
+# aren't in use right now and were competing for RAM with the VPS's Docker
+# Compose production stack on the same 1-vCPU/4GB host). Bump back to 1 when
+# needed — dev/prod overlays are untouched.
+replicas:
+  - name: blueprint-backend
+    count: 0
+  - name: blueprint-frontend
+    count: 0
+  - name: blueprint-auth
+    count: 0
+  - name: blueprint-auth-frontend
+    count: 0
+  - name: guia-backend
+    count: 0
+  - name: guia-frontend
+    count: 0
+  - name: n8n
+    count: 0
+  - name: n8n-worker
+    count: 0
+  - name: redis
+    count: 0

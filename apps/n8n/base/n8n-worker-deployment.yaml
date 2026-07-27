@@ -22,3 +22,10 @@ spec:
                 name: n8n-config
             - secretRef:
                 name: n8n-secret
+          resources:
+            requests:
+              cpu: 75m
+              memory: 256Mi
+            limits:
+              cpu: 400m
+              memory: 640Mi

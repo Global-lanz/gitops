@@ -17,6 +17,13 @@ spec:
           image: redis:6
           ports:
             - containerPort: 6379
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
           readinessProbe:
             tcpSocket:
               port: 6379

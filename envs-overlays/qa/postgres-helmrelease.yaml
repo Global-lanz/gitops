@@ -26,6 +26,13 @@ spec:
       replicaCount: 1
       persistence:
         size: 8Gi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
       initdb:
         scripts:
           01-extra-databases.sql: |

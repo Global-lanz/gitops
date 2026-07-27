@@ -23,6 +23,13 @@ spec:
                 name: guia-config
             - secretRef:
                 name: guia-secret
+          resources:
+            requests:
+              cpu: 25m
+              memory: 96Mi
+            limits:
+              cpu: 250m
+              memory: 320Mi
           readinessProbe:
             tcpSocket:
               port: 3000

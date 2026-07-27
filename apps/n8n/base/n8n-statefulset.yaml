@@ -24,6 +24,13 @@ spec:
                 name: n8n-config
             - secretRef:
                 name: n8n-secret
+          resources:
+            requests:
+              cpu: 100m
+              memory: 320Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
           volumeMounts:
             - name: n8n-data
               mountPath: /home/node/.n8n
