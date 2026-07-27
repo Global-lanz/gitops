@@ -28,9 +28,9 @@ replicas:
   - name: blueprint-auth-frontend
     count: 1
   - name: guia-backend
-    count: 0
+    count: 1
   - name: guia-frontend
-    count: 0
+    count: 1
   - name: norteia-backend
     count: 0
   - name: norteia-frontend
