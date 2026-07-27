@@ -40,8 +40,11 @@ spec:
               cpu: 20m
               memory: 128Mi
             limits:
-              cpu: 200m
-              memory: 384Mi
+              # pgadmin4's image boots postfix+gunicorn+Python slowly; a tight
+              # CPU limit throttles startup past the liveness probe's window
+              # and kubelet kills it before it ever finishes booting.
+              cpu: 600m
+              memory: 512Mi
           volumeMounts:
             - name: pgadmin-data
               mountPath: /var/lib/pgadmin
