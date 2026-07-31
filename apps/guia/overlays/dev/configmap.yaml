@@ -7,11 +7,11 @@ data:
   NODE_ENV: production
   APP_ENVIRONMENT: dev
   AUTH_MODE: external
-  MODULE_KEY: chat
+  MODULE_KEY: guia
   # In-cluster URL of the central auth service (same namespace)
   AUTH_BASE_URL: http://blueprint-auth:3400
-  AUTH_PORTAL_URL: http://auth.blueprint-dev.ionflux.cloud
-  ALLOWED_ORIGINS: http://guia-dev.ionflux.cloud
+  AUTH_PORTAL_URL: https://auth.blueprint-dev.ionflux.cloud
+  ALLOWED_ORIGINS: https://guia-dev.ionflux.cloud
   N8N_WEBHOOK_URL: https://n8n-dev.ionflux.cloud/webhook/guia
   # --- Frontend (read at container start -> env-config.js) ---
-  API_BASE_URL: http://api.guia-dev.ionflux.cloud
+  API_BASE_URL: https://api.guia-dev.ionflux.cloud

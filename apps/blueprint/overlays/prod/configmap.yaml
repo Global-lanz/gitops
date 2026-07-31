@@ -4,8 +4,10 @@ metadata:
   name: blueprint-config
 data:
   PORT: "3333"
-  API_URL: https://api.blueprint.ionflux.cloud
-  BACKEND_URL: https://api.blueprint.ionflux.cloud
+  # Relative base: the frontend's nginx proxies /api/ -> blueprint-backend:3333
+  # (backend has global prefix `api`). Same-origin, scheme-agnostic, no CORS.
+  API_URL: /api
+  BACKEND_URL: http://blueprint-backend:3333
   FRONTEND_URL: https://blueprint.ionflux.cloud
   # Central auth portal — used for login redirect and the /logout (SSO) handoff.
   AUTH_PORTAL_URL: https://auth.blueprint.ionflux.cloud

@@ -8,9 +8,9 @@ data:
   # (backend has global prefix `api`). Same-origin, scheme-agnostic, no CORS.
   API_URL: /api
   BACKEND_URL: http://blueprint-backend:3333
-  FRONTEND_URL: http://blueprint-dev.ionflux.cloud
+  FRONTEND_URL: https://blueprint-dev.ionflux.cloud
   # Central auth portal — used for login redirect and the /logout (SSO) handoff.
-  AUTH_PORTAL_URL: http://auth.blueprint-dev.ionflux.cloud
+  AUTH_PORTAL_URL: https://auth.blueprint-dev.ionflux.cloud
   S3_ENDPOINT: http://minio.tools.svc.cluster.local:9000
   S3_BUCKET: blueprint
   S3_PUBLIC_URL: http://minio.tools.svc.cluster.local:9000
