@@ -9,6 +9,6 @@ resources:
 # depois de testar em ambientes mais baixos.
 images:
   - name: maiconlanzendorf/blueprint-auth
-    newTag: "0.2.0"
+    newTag: "RC.20260803.001"
   - name: maiconlanzendorf/blueprint-auth-frontend
-    newTag: "0.3.0"
+    newTag: "RC.20260803.001"
