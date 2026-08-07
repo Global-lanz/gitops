@@ -11,4 +11,4 @@ images:
   - name: maiconlanzendorf/blueprint-auth
     newTag: "RC.20260806.001"
   - name: maiconlanzendorf/blueprint-auth-frontend
-    newTag: "RC.20260806.002"
+    newTag: "RC.20260807.001"

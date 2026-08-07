@@ -12,4 +12,4 @@ images:
   - name: maiconlanzendorf/blueprint-backend
     newTag: "RC.20260806.001"
   - name: maiconlanzendorf/blueprint-frontend
-    newTag: "RC.20260806.001"
+    newTag: "RC.20260807.001"
