@@ -17,3 +17,4 @@ data:
   SMTP_PORT: "587"
   SMTP_SECURE: "false"
   SMTP_FROM: "Auth <no-reply@blueprint-auth.local>"
+  BLUEPRINT_APP_URL: https://blueprint.ionflux.cloud
