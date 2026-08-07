@@ -10,6 +10,6 @@ resources:
 # depois de testar em ambientes mais baixos.
 images:
   - name: maiconlanzendorf/blueprint-backend
-    newTag: "1.4.0"
+    newTag: "RC.20260806.001"
   - name: maiconlanzendorf/blueprint-frontend
-    newTag: "1.3.2"
+    newTag: "RC.20260806.001"
