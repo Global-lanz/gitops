@@ -22,6 +22,13 @@ spec:
             # nginx proxies /api -> the in-cluster blueprint-auth service (:3400)
             - name: API_BASE_URL
               value: /api
+            # Base URL of the Blueprint app deployment, used to redirect
+            # PROJECT_TEMPLATE modules to /m/{moduleKey} (BLUEPRINT-12)
+            - name: BLUEPRINT_APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: blueprint-auth-config
+                  key: BLUEPRINT_APP_URL
           resources:
             requests:
               cpu: 10m
