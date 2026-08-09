@@ -16,3 +16,13 @@ data:
   INITIAL_ADMIN_USERNAME: admin
   # --- Frontend (read at container start -> env-config.js) ---
   API_BASE_URL: https://api.norteia-dev.ionflux.cloud
+  # --- Embed SSO (frontend: CSP frame-ancestors + login-screen gate) ---
+  # PLACEHOLDER — meudua has no test/staging environment yet, only prod
+  # (https://meudua.com.br). Deliberately NOT pointing at their real prod
+  # domain from dev, so their live site can't embed an unfinished/untested
+  # integration. Replace both with meudua's real values once they have a
+  # non-prod environment to test against, or once we're ready to cut over.
+  EMBED_ALLOWED_ORIGIN: https://embed-integration-pending.invalid
+  # Where the "Voltar para a aplicação" link on the gated login screen sends
+  # the user back to (see login.component.ts). Same placeholder reasoning.
+  EMBED_FALLBACK_URL: https://embed-integration-pending.invalid

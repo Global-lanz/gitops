@@ -13,3 +13,9 @@ data:
   N8N_WEBHOOK_URL: https://n8n-qa.ionflux.cloud/webhook/guia
   API_BASE_URL: https://api.guia-qa.ionflux.cloud
   MODULE_KEY: guia
+  # --- Embed SSO (frontend: CSP frame-ancestors + login-screen gate) ---
+  # blueprint-qa embeds guia's chat as a floating widget (blueprint-backend's
+  # CHAT_EMBED_BASE_URL/CHAT_EMBED_SHARED_SECRET call POST /api/embed/session
+  # here). Both values point at blueprint-qa's own public origin.
+  EMBED_ALLOWED_ORIGIN: https://blueprint-qa.ionflux.cloud
+  EMBED_FALLBACK_URL: https://blueprint-qa.ionflux.cloud
