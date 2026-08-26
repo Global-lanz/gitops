@@ -9,13 +9,13 @@ data:
   APP_ENVIRONMENT: qa
   BOT_NAME: NorteIA
   AUTH_MODE: internal
-  ALLOWED_ORIGINS: http://norteia-qa.ionflux.cloud
+  ALLOWED_ORIGINS: https://norteia-qa.ionflux.cloud
   N8N_WEBHOOK_URL: https://n8n-qa.ionflux.cloud/webhook/chat
   N8N_EMAIL_WEBHOOK_URL: https://n8n-qa.ionflux.cloud/webhook/welcome-email
   INITIAL_ADMIN_EMAIL: admin@norteia-qa.ionflux.cloud
   INITIAL_ADMIN_USERNAME: admin
   # --- Frontend (read at container start -> env-config.js) ---
-  API_BASE_URL: http://api.norteia-qa.ionflux.cloud
+  API_BASE_URL: https://api.norteia-qa.ionflux.cloud
   # --- Embed SSO (meudua embeds norteia's chat via iframe) ---
   # Requires the n8n-chat-backend/frontend images to include the embed-SSO
   # feature (unreleased as of 1.4.0 - still a pending changeset). Bump the
