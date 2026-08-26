@@ -16,3 +16,9 @@ data:
   INITIAL_ADMIN_USERNAME: admin
   # --- Frontend (read at container start -> env-config.js) ---
   API_BASE_URL: http://api.norteia-qa.ionflux.cloud
+  # --- Embed SSO (meudua embeds norteia's chat via iframe) ---
+  # Requires the n8n-chat-backend/frontend images to include the embed-SSO
+  # feature (unreleased as of 1.4.0 - still a pending changeset). Bump the
+  # image tags below once that version is published, or these are inert.
+  EMBED_ALLOWED_ORIGIN: https://estudio-dua-staging.vercel.app
+  EMBED_FALLBACK_URL: https://estudio-dua-staging.vercel.app

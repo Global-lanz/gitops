@@ -32,9 +32,9 @@ replicas:
   - name: guia-frontend
     count: 1
   - name: norteia-backend
-    count: 0
+    count: 1
   - name: norteia-frontend
-    count: 0
+    count: 1
   - name: n8n
     count: 0
   - name: n8n-worker
