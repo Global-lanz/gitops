@@ -11,6 +11,6 @@ resources:
 # outros apps que usem a mesma imagem base (ex: norteia).
 images:
   - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "RC.20260810.001"
+    newTag: "1.5.0"
   - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "RC.20260809.001"
+    newTag: "1.5.0"
