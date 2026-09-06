@@ -10,7 +10,7 @@ data:
   BOT_NAME: NorteIA
   AUTH_MODE: internal
   ALLOWED_ORIGINS: https://norteia-qa.ionflux.cloud
-  N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook-test/6b50add0-89fb-4ac0-b645-34465280e07f
+  N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/6b50add0-89fb-4ac0-b645-34465280e07f
   N8N_EMAIL_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/welcome-email
   INITIAL_ADMIN_EMAIL: admin@norteia-qa.ionflux.cloud
   INITIAL_ADMIN_USERNAME: admin
