@@ -13,7 +13,7 @@ images:
   - name: maiconlanzendorf/n8n-chat-backend
     newTag: "RC.20260906.004"
   - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "RC.20260906.003"
+    newTag: "RC.20260906.004"
   # - name: maiconlanzendorf/n8n-chat-backend
   #   newTag: "1.5.0"
   # - name: maiconlanzendorf/n8n-chat-frontend
