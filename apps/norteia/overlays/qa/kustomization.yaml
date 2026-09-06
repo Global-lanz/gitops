@@ -11,7 +11,7 @@ resources:
 # afeta outros apps que usem a mesma imagem base (ex: guia).
 images:
   - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "RC.20260906.002"
+    newTag: "RC.20260906.003"
   - name: maiconlanzendorf/n8n-chat-frontend
     newTag: "RC.20260906.002"
   # - name: maiconlanzendorf/n8n-chat-backend
