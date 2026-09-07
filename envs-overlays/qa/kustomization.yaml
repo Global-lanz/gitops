@@ -8,11 +8,13 @@ resources:
   - ../../apps/norteia/overlays/qa
   - ../../apps/guia/overlays/qa
   - ../../apps/n8n/overlays/qa
+  - ../../apps/astra/overlays/qa
+  
   # Astra - descomentar SO DEPOIS de (1) criar o database astradb e o usuario app
   # no postgres-qa-postgresql e (2) publicar a imagem astra-api. Sem o banco o
   # Flyway derruba o pod no start; sem a imagem e ImagePullBackOff. Nos dois casos
   # e crashloop num host de 1 vCPU que ja esta apertado.
-  # - ../../apps/astra/overlays/qa
+  
   - postgres-helmrelease.yaml
   # kafka-helmrelease.yaml disabled: bitnami/kafka and bitnami/zookeeper images
   # are no longer published on Docker Hub (even the `latest` tag 404s) and the
