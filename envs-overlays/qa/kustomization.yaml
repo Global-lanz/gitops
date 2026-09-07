@@ -27,17 +27,17 @@ resources:
 # needed — dev/prod overlays are untouched.
 replicas:
   - name: blueprint-backend
-    count: 1
+    count: 0
   - name: blueprint-frontend
-    count: 1
+    count: 0
   - name: blueprint-auth
-    count: 1
+    count: 0
   - name: blueprint-auth-frontend
-    count: 1
+    count: 0
   - name: guia-backend
-    count: 1
+    count: 0
   - name: guia-frontend
-    count: 1
+    count: 0
   - name: norteia-backend
     count: 1
   - name: norteia-frontend
