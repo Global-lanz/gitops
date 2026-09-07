@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: astra-api
+spec:
+  selector:
+    app: astra-api
+  ports:
+    - port: 8080
+      targetPort: 8080

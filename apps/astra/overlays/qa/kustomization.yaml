@@ -1,0 +1,18 @@
+namespace: qa
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.enc.yaml
+  - ingress.yaml
+# Pin da versao promovida pro qa. O Astra nao tem ambiente `dev` (ADR-0013):
+# a maquina local e o ambiente de desenvolvimento e o cluster comeca aqui.
+#
+# O `qa` recebe RELEASE CANDIDATES (RC.AAAAMMDD.NNN), publicadas quando um PR
+# ganha a label `RC` no repositorio astra-api. O `prod` so recebe versao final
+# (x.y.z). E o que da sentido a ter os dois ambientes.
+#
+# Confira o que subiu em GET https://api.astra-qa.ionflux.cloud/api/v1/health -
+# o campo `version` mostra a tag exata da imagem em execucao.
+images:
+  - name: maiconlanzendorf/astra-api
+    newTag: "0.1.0"

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: astra-config
+data:
+  ASTRA_ENVIRONMENT: qa
+  ASTRA_PUBLIC_URL: https://api.astra-qa.ionflux.cloud
+  # Pool pequeno de proposito: o Postgres do qa roda com 256Mi de limite.
+  DB_POOL_MAX: "8"
+  LOG_LEVEL: INFO

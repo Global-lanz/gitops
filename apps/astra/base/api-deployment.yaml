@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: astra-api
+spec:
+  replicas: 1
+  # 1 replica e obrigatoria enquanto o chat de evento usar o broker STOMP em
+  # memoria (ADR-0007): duas usuarias em pods diferentes nao se veriam.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: astra-api
+  template:
+    metadata:
+      labels:
+        app: astra-api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: astra-api
+          image: maiconlanzendorf/astra-api:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: astra-config
+            - secretRef:
+                name: astra-secret
+          resources:
+            # VPS de 1 vCPU / 4 GB dividido com a stack Docker Compose. A JVM esta
+            # ajustada no Dockerfile (SerialGC, MaxRAMPercentage=70, Xss512k) para
+            # caber aqui. Se o pod for morto por OOM, suba o limite antes de mexer
+            # no codigo — 512Mi e o piso realista para Spring Boot com JPA.
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 750m
+              memory: 512Mi
+          startupProbe:
+            # Spring Boot leva ~20-40s para subir num vCPU compartilhado. Sem esta
+            # probe o liveness mata o pod antes de ele terminar de iniciar.
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 20
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
