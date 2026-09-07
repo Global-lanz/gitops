@@ -18,6 +18,14 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        # O UID precisa ser NUMERICO aqui. Sem isto, com `USER astra` na imagem, o
+        # kubelet nao consegue verificar que o usuario nao e root e o pod fica em
+        # CreateContainerConfigError. 100/101 sao os ids fixados no Dockerfile.
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: astra-api
           image: maiconlanzendorf/astra-api:0.1.0
