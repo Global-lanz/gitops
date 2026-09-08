@@ -8,3 +8,15 @@ data:
   # Pool pequeno de proposito: o Postgres do qa roda com 256Mi de limite.
   DB_POOL_MAX: "8"
   LOG_LEVEL: INFO
+
+  # Object storage (protocolo S3). Nada aqui e segredo: o par de chaves fica no
+  # astra-secret, cifrado com SOPS.
+  #
+  # Trocar de fornecedor - MinIO ou Garage no cluster, B2, R2 - e mexer nestas
+  # quatro linhas. O codigo nao sabe quem esta do outro lado.
+  STORAGE_ENDPOINT: https://gyluevludierlvfytmgw.storage.supabase.co/storage/v1/s3
+  STORAGE_REGION: eu-central-1
+  STORAGE_BUCKET: astra-qa
+  # Host de LEITURA, diferente do endpoint de escrita acima. O bucket precisa
+  # estar marcado como publico no Supabase para esta URL responder.
+  STORAGE_PUBLIC_BASE_URL: https://gyluevludierlvfytmgw.storage.supabase.co/storage/v1/object/public/astra-qa
