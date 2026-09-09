@@ -1,14 +1,22 @@
+# Reconciliation is paced for a 1 vCPU / 4 GB host that also runs a Docker Compose
+# production stack (see astra/docs/03-infra-e-deploy.md). At `interval: 1m` with
+# `timeout: 5m`, a reconcile that takes longer than a minute overlaps the next one
+# and they pile up -- which is how `flux-system` ends up stuck in "Reconciliation in
+# progress" while the node thrashes. Wider intervals cost nothing: a deploy that
+# cannot wait is one `flux reconcile kustomization <name> --with-source` away.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: prod
   namespace: flux-system
 spec:
-  interval: 1m
+  interval: 5m
   path: ./envs-overlays/prod
   prune: true
-  wait: true
-  timeout: 5m
+  # Off: nothing here uses `dependsOn`, so `wait` bought no ordering -- it only
+  # made the controller poll every applied object for readiness on every pass.
+  wait: false
+  timeout: 3m
   sourceRef:
     kind: GitRepository
     name: gitops

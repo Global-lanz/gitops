@@ -4,7 +4,10 @@ metadata:
   name: gitops
   namespace: flux-system
 spec:
-  interval: 1m
+  # A git fetch a minute, forever, on a host with no CPU to spare. Nothing here
+  # changes that often, and a push that needs to land now can be pulled with
+  # `flux reconcile source git gitops`.
+  interval: 5m
   url: https://github.com/Global-lanz/gitops.git
   ref:
     branch: main
