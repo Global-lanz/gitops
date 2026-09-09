@@ -15,4 +15,4 @@ resources:
 # o campo `version` mostra a tag exata da imagem em execucao.
 images:
   - name: maiconlanzendorf/astra-api
-    newTag: "RC.20260909.001"
+    newTag: "RC.20260909.002"
