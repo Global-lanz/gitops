@@ -48,3 +48,5 @@ replicas:
     count: 0
   - name: redis
     count: 0
+  - name: astra-api
+    count: 0
