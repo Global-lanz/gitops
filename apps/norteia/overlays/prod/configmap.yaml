@@ -9,28 +9,34 @@ data:
   APP_ENVIRONMENT: production
   BOT_NAME: NorteIA
   AUTH_MODE: internal
-  ALLOWED_ORIGINS: https://norteia.ionflux.cloud
-  # TODO(cutover): conferir antes de ligar o Flux de prod. O n8n espera a
-  # "Production URL" completa do nó de webhook, com UUID — é assim que o qa
-  # está (.../webhook/6b50add0-89fb-4ac0-b645-34465280e07f). O path curto
-  # abaixo veio do stack Compose antigo e provavelmente não resolve no
-  # workflow de produção; sem isso o chat aceita a mensagem e nunca responde.
+  # O próprio domínio, mais os dois do MeuDua, que embute o chat numa gaveta.
+  # Vale tanto para as chamadas HTTP quanto para o WebSocket: o Socket.io usa
+  # esta mesma configuração de CORS (getCorsConfig em index.ts), e a gaveta
+  # depende dele para receber as respostas do bot.
+  #
+  # apex E www: são origins distintos para o navegador. Se a aluna chegar por
+  # www.meudua.com.br e só o apex estiver liberado, o CORS bloqueia — e o
+  # sintoma aparece como "o chat não responde", não como erro de configuração.
+  ALLOWED_ORIGINS: https://norteia.ionflux.cloud,https://meudua.com.br,https://www.meudua.com.br
   N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/6d29f33f-881b-4111-a192-bfb6d603f815
   N8N_EMAIL_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/welcome-email
   INITIAL_ADMIN_EMAIL: admin@norteia.ionflux.cloud
   INITIAL_ADMIN_USERNAME: admin
   # --- Frontend (read at container start -> env-config.js) ---
   API_BASE_URL: https://api.norteia.ionflux.cloud
-  # --- Embed SSO (o app do terceiro embute o chat da norteia via iframe) ---
-  # Deliberadamente comentado: o valor precisa ser o origin de PRODUÇÃO do
-  # app host (esquema + host, sem barra final e sem path), e ele ainda não
-  # foi informado. Publicar um placeholder seria pior que não publicar —
-  # EMBED_FALLBACK_URL vira um link quebrado na tela de login dentro do
-  # iframe. Descomentar e preencher junto com o EMBED_SHARED_SECRET no
-  # secret.enc.yaml (hoje ausente em prod; sem ele /api/embed/session
-  # responde 500). Múltiplos origins: separar por vírgula. Nunca wildcard.
-  # EMBED_ALLOWED_ORIGIN: https://<origin-de-producao-do-app-host>
-  # EMBED_FALLBACK_URL: https://<url-de-producao-do-app-host>
-  EMBED_ALLOWED_ORIGIN: https://meudua.com.br
+  # --- Embed SSO (o MeuDua embute o chat da norteia via iframe) ---
+  # Quem pode colocar este app dentro de um iframe. Vira o CSP frame-ancestors
+  # no docker-entrypoint.sh do frontend; vários origins separados por vírgula,
+  # nunca wildcard. Mesmo motivo do ALLOWED_ORIGINS para listar apex e www.
+  #
+  # ATENÇÃO: hoje esta restrição NÃO chega ao navegador. No nginx.conf do
+  # frontend o `include` do frame-ancestors está no nível `server`, e
+  # `add_header` não é herdado por um `location` que declara os seus — como
+  # `/` resolve via `location = /index.html`, a resposta sai sem CSP e sem
+  # X-Frame-Options (verificado na produção no ar). Ou seja: o iframe funciona,
+  # mas por ausência de header, não por esta lista. Corrigir no chat-n8n.
+  EMBED_ALLOWED_ORIGIN: https://meudua.com.br,https://www.meudua.com.br
+  # Um único destino, não uma lista: é o link "continuar no app" que a tela de
+  # login mostra quando detecta que está dentro de um iframe.
   EMBED_FALLBACK_URL: https://meudua.com.br
 
