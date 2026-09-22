@@ -17,6 +17,10 @@ param(
     [Parameter(Mandatory = $true)] [string] $Arquivo,
     [Parameter(Mandatory = $true)] [string] $Campo,
     [string] $Valor,
+    # Cria o arquivo do zero, com este nome de Secret. So e aceito quando
+    # -Arquivo ainda nao existe; num arquivo existente seria uma forma silenciosa
+    # de renomear o Secret e orfanar o que estava aplicado no cluster.
+    [string] $NovoSecret,
     # Sorteia um segredo forte em vez de receber um pronto.
     [switch] $Gerar,
     # Imprime o valor. So faz sentido com -Gerar: um segredo que voce precisa
@@ -30,8 +34,15 @@ $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 if (-not [IO.Path]::IsPathRooted($Arquivo)) { $Arquivo = Join-Path $repo $Arquivo }
-if (-not (Test-Path $Arquivo)) {
+$criando = -not (Test-Path $Arquivo)
+
+if ($criando -and -not $NovoSecret) {
     Write-Host "Arquivo nao encontrado: $Arquivo" -ForegroundColor Red
+    Write-Host "Para criar um secret novo, passe -NovoSecret <nome-do-Secret>." -ForegroundColor Yellow
+    exit 1
+}
+if (-not $criando -and $NovoSecret) {
+    Write-Host "-NovoSecret so vale para arquivo inexistente. $Arquivo ja existe." -ForegroundColor Red
     exit 1
 }
 
@@ -73,46 +84,55 @@ if (-not $recipients) {
 Write-Host "Arquivo:   $Arquivo"
 Write-Host "Chave age: $keyFile"
 Write-Host ""
-Write-Host "Decifrando o secret atual..."
+if (-not $criando) { Write-Host "Decifrando o secret atual..." }
 
 # O 2>&1 num exe nativo faz o PS 5.1 empacotar cada linha de stderr num
 # ErrorRecord; com ErrorActionPreference=Stop isso vira excecao terminante e
-# mata o script ANTES da mensagem de erro util abaixo. Escopar o Continue so
-# nesta chamada preserva o diagnostico.
-$plain = & { $ErrorActionPreference = 'Continue'; sops decrypt $Arquivo 2>&1 }
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "NAO decifrou. Erro do sops:" -ForegroundColor Red
-    $plain | ForEach-Object { Write-Host "  $_" }
-    Write-Host ""
-    Write-Host "Rode o sops-doctor.ps1 -- ele diz exatamente qual chave falta." -ForegroundColor Red
-    exit 1
-}
-
+# mata o script ANTES da mensagem de erro util. Escopar o Continue so nessa
+# chamada preserva o diagnostico.
+#
 # Preserva a ordem de leitura: o diff do git fica legivel e a revisao, honesta.
 $campos = [ordered]@{}
 $nomeSecret = $null
 $tipoSecret = "Opaque"
 
-foreach ($line in $plain) {
-    $t = "$line"
-    if ($t -match '^\s{2,}name:\s*(\S+)\s*$' -and -not $nomeSecret) { $nomeSecret = $Matches[1]; continue }
-    if ($t -match '^type:\s*(\S+)\s*$') { $tipoSecret = $Matches[1]; continue }
-    if ($t -match '^\s+([A-Z][A-Z0-9_]*):\s*(.*)$') {
-        $campos[$Matches[1]] = $Matches[2].Trim().Trim('"').Trim("'")
+if ($criando) {
+    $nomeSecret = $NovoSecret
+    Write-Host "Arquivo novo. Secret: $nomeSecret" -ForegroundColor Green
+} else {
+    $plain = & { $ErrorActionPreference = 'Continue'; sops decrypt $Arquivo 2>&1 }
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "NAO decifrou. Erro do sops:" -ForegroundColor Red
+        $plain | ForEach-Object { Write-Host "  $_" }
+        Write-Host ""
+        Write-Host "Rode o sops-doctor.ps1 -- ele diz exatamente qual chave falta." -ForegroundColor Red
+        exit 1
     }
-}
 
-if (-not $nomeSecret) {
-    Write-Host "Nao consegui ler metadata.name do secret. Abortado." -ForegroundColor Red
-    exit 1
-}
-if ($campos.Count -eq 0) {
-    Write-Host "Nenhum campo reconhecido em stringData. Abortado para nao truncar." -ForegroundColor Red
-    exit 1
-}
+    foreach ($line in $plain) {
+        $t = "$line"
+        if ($t -match '^\s{2,}name:\s*(\S+)\s*$' -and -not $nomeSecret) { $nomeSecret = $Matches[1]; continue }
+        if ($t -match '^type:\s*(\S+)\s*$') { $tipoSecret = $Matches[1]; continue }
+        # Minusculas e hifen entram porque nem toda chave de Secret e uma env
+        # var: o chart do Postgres espera `postgres-password` e `password`.
+        # Exige valor (.+) para nao capturar as chaves de estrutura do YAML.
+        if ($t -match '^\s+([A-Za-z][A-Za-z0-9_.-]*):\s*(.+)$') {
+            $campos[$Matches[1]] = $Matches[2].Trim().Trim('"').Trim("'")
+        }
+    }
 
-Write-Host "Secret:    $nomeSecret" -ForegroundColor Green
-Write-Host "Campos ja existentes: $($campos.Keys -join ', ')" -ForegroundColor Green
+    if (-not $nomeSecret) {
+        Write-Host "Nao consegui ler metadata.name do secret. Abortado." -ForegroundColor Red
+        exit 1
+    }
+    if ($campos.Count -eq 0) {
+        Write-Host "Nenhum campo reconhecido em stringData. Abortado para nao truncar." -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host "Secret:    $nomeSecret" -ForegroundColor Green
+    Write-Host "Campos ja existentes: $($campos.Keys -join ', ')" -ForegroundColor Green
+}
 
 $existia = $campos.Contains($Campo)
 
@@ -213,13 +233,21 @@ finally {
 $depois = & { $ErrorActionPreference = 'Continue'; sops decrypt $Arquivo 2>&1 }
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "O arquivo novo NAO decifra. Restaure com:" -ForegroundColor Red
-    Write-Host "  git -C `"$repo`" checkout -- $Arquivo" -ForegroundColor Red
+    if ($criando) {
+        # Nao existia antes desta execucao, entao nao ha versao a restaurar --
+        # `git checkout` aqui so produziria um "pathspec did not match".
+        Write-Host "O arquivo gerado NAO decifra. Ele e novo: apague e tente de novo." -ForegroundColor Red
+        Write-Host "  Remove-Item `"$Arquivo`"" -ForegroundColor Red
+    } else {
+        Write-Host "O arquivo novo NAO decifra. Restaure com:" -ForegroundColor Red
+        Write-Host "  git -C `"$repo`" checkout -- $Arquivo" -ForegroundColor Red
+    }
     exit 1
 }
 
-$nomes = @($depois | Select-String -Pattern "^\s+[A-Z][A-Z0-9_]*:" |
-    ForEach-Object { ($_.Line -split ":")[0].Trim() })
+$nomes = @($depois | Select-String -Pattern "^\s+[A-Za-z][A-Za-z0-9_.-]*:" |
+    ForEach-Object { ($_.Line -split ":")[0].Trim() } |
+    Where-Object { $_ -ne "name" })
 
 Write-Host ""
 Write-Host "Chaves no secret agora:" -ForegroundColor Green

@@ -20,3 +20,17 @@ images:
     newTag: "1.6.0"
   - name: maiconlanzendorf/n8n-chat-frontend
     newTag: "1.7.0"
+
+# A NetworkPolicy do postgres-prod passou a exigir este label de quem conecta
+# (allowExternal: false no HelmRelease do overlay de prod). Sem ele o backend
+# sobe normalmente e so falha ao abrir conexao com o banco -- e como ele esta
+# em replicas 0 ate o restore, a falha so apareceria na hora de subir.
+# So o backend leva o label: o frontend e nginx e nao fala com o Postgres.
+patches:
+  - target:
+      kind: Deployment
+      name: norteia-backend
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/postgres-prod-postgresql-client
+        value: "true"
