@@ -55,8 +55,13 @@ foreach ($rotulo in $candidatos.Keys) {
     $caminho = $candidatos[$rotulo]
     if (Test-Path $caminho) {
         $pubs = @(age-keygen -y $caminho 2>$null)
+        $info = Get-Item $caminho
         Write-Host "  [ok]    $rotulo" -ForegroundColor Green
+        # Tamanho e mtime aparecem porque "rodei o instalador" e "o instalador
+        # gravou" nao sao a mesma coisa. Um arquivo com data antiga e o mesmo
+        # numero de bytes de antes diz, sozinho, que a escrita nao aconteceu.
         Write-Host "          $caminho"
+        Write-Host "          $($info.Length) bytes, modificado em $($info.LastWriteTime)" -ForegroundColor DarkGray
         foreach ($p in $pubs) {
             Write-Host "          -> $p" -ForegroundColor DarkGray
             if ($rotulo -like "*APPDATA*") { $identidades += $p }
@@ -89,8 +94,32 @@ $cobertos = @($recipients | Where-Object { $identidades -contains $_ })
 $orfaos   = @($recipients | Where-Object { $identidades -notcontains $_ })
 
 if ($orfaos.Count -eq 0) {
-    Write-Host "VEREDITO: voce tem a chave privada de todos os recipients." -ForegroundColor Green
-    Write-Host "Se ainda assim nao decifra, o problema e no arquivo, nao na chave." -ForegroundColor Green
+    # Casar identidade com recipient e inferencia, nao prova. Ja aconteceu de
+    # esta conta fechar e o sops mesmo assim nao decifrar -- um "verde" que
+    # custa a tarde inteira de quem confia nele. Entao o veredito final e o
+    # unico teste que vale: tentar decifrar um arquivo de verdade.
+    $amostra = Get-ChildItem -Path (Join-Path $repo "apps") -Recurse -Filter "secret.enc.yaml" -File |
+        Select-Object -First 1
+    if ($amostra) {
+        & { $ErrorActionPreference = 'Continue'; sops decrypt $amostra.FullName 2>&1 } | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "VEREDITO: decifra de verdade (testado em $($amostra.Name))." -ForegroundColor Green
+        } else {
+            Write-Host "VEREDITO: as identidades batem, mas o sops NAO decifra." -ForegroundColor Red
+            Write-Host "Voce tem uma chave publica que confere e ainda assim falha." -ForegroundColor Red
+            Write-Host "Causas tipicas, nesta ordem:" -ForegroundColor Yellow
+            Write-Host "  1. CRLF no keys.txt: o age ignora a identidade em silencio." -ForegroundColor Yellow
+            Write-Host "  2. SOPS_AGE_KEY_FILE apontando para outro arquivo (veja acima)." -ForegroundColor Yellow
+            Write-Host "  3. O arquivo lido aqui nao e o que o sops le: confira o mtime" -ForegroundColor Yellow
+            Write-Host "     acima -- se for antigo, o instalador nao gravou onde voce pensa." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "Saida crua do sops:" -ForegroundColor DarkGray
+            & { $ErrorActionPreference = 'Continue'; sops decrypt $amostra.FullName 2>&1 } |
+                Select-Object -First 12 | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
+        }
+    } else {
+        Write-Host "VEREDITO: identidades batem, mas nao achei secret para testar." -ForegroundColor Yellow
+    }
 } else {
     Write-Host "VEREDITO: falta a chave privada de:" -ForegroundColor Red
     foreach ($o in $orfaos) { Write-Host "  $o" -ForegroundColor Red }
