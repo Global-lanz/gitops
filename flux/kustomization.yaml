@@ -10,4 +10,4 @@ resources:
   # environment specific reconciliation — comment/uncomment to disable/enable
   # - flux-kustomization-dev.yaml
   - flux-kustomization-qa.yaml
-  # - flux-kustomization-prod.yaml
+  - flux-kustomization-prod.yaml
