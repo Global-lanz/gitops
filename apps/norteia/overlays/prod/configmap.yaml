@@ -10,9 +10,24 @@ data:
   BOT_NAME: NorteIA
   AUTH_MODE: internal
   ALLOWED_ORIGINS: https://norteia.ionflux.cloud
+  # TODO(cutover): conferir antes de ligar o Flux de prod. O n8n espera a
+  # "Production URL" completa do nó de webhook, com UUID — é assim que o qa
+  # está (.../webhook/6b50add0-89fb-4ac0-b645-34465280e07f). O path curto
+  # abaixo veio do stack Compose antigo e provavelmente não resolve no
+  # workflow de produção; sem isso o chat aceita a mensagem e nunca responde.
   N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/chat
   N8N_EMAIL_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/welcome-email
   INITIAL_ADMIN_EMAIL: admin@norteia.ionflux.cloud
   INITIAL_ADMIN_USERNAME: admin
   # --- Frontend (read at container start -> env-config.js) ---
   API_BASE_URL: https://api.norteia.ionflux.cloud
+  # --- Embed SSO (o app do terceiro embute o chat da norteia via iframe) ---
+  # Deliberadamente comentado: o valor precisa ser o origin de PRODUÇÃO do
+  # app host (esquema + host, sem barra final e sem path), e ele ainda não
+  # foi informado. Publicar um placeholder seria pior que não publicar —
+  # EMBED_FALLBACK_URL vira um link quebrado na tela de login dentro do
+  # iframe. Descomentar e preencher junto com o EMBED_SHARED_SECRET no
+  # secret.enc.yaml (hoje ausente em prod; sem ele /api/embed/session
+  # responde 500). Múltiplos origins: separar por vírgula. Nunca wildcard.
+  # EMBED_ALLOWED_ORIGIN: https://<origin-de-producao-do-app-host>
+  # EMBED_FALLBACK_URL: https://<url-de-producao-do-app-host>

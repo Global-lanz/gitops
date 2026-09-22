@@ -21,11 +21,29 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/postgresql
+      # `latest` porque as tags versionadas da bitnami já saíram do Docker Hub
+      # (bitnami/postgresql:15 e :16 dão 404; só `latest` ainda resolve — mesma
+      # retirada que matou o bitnami/kafka). O chart força imagePullPolicy:
+      # IfNotPresent e o nó já tem esse `latest` em cache no digest
+      # sha256:db2312d9... = PostgreSQL 16.4.0, que é o que o qa roda. Como é
+      # nó único, o prod reaproveita a mesma imagem e as duas versões batem.
+      # Se o cache do nó for limpo, `latest` pode vir com outro major — nesse
+      # dia, pinar por digest antes de subir.
       tag: latest
     primary:
       replicaCount: 1
       persistence:
         size: 8Gi
+      # Sem isto o Postgres de prod competia sem teto com o resto do nó
+      # (1 vCPU / 4 GB, compartilhado com o stack Compose). Mesmos valores
+      # do qa, que roda com folga nessa faixa.
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
       initdb:
         scripts:
           01-extra-databases.sql: |

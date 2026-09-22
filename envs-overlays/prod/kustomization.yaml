@@ -9,4 +9,41 @@ resources:
   - ../../apps/guia/overlays/prod
   - ../../apps/n8n/overlays/prod
   - postgres-helmrelease.yaml
-  - kafka-helmrelease.yaml
+
+  # kafka-helmrelease.yaml desabilitado — mesma razão do qa: as imagens
+  # bitnami/kafka e bitnami/zookeeper não são mais publicadas no Docker Hub
+  # (até a tag `latest` dá 404), então isso só rende ImagePullBackOff. Nada
+  # em prod consome Kafka hoje (o astra decidiu não usar no MVP).
+  # - kafka-helmrelease.yaml
+
+# Só o norteia sobe em prod. O resto fica em 0 pelo mesmo motivo do qa: o nó
+# é 1 vCPU / 4 GB, já está com ~58% de CPU requisitada e divide a máquina com
+# o stack Docker Compose de produção. Ligar o Flux de prod com todos esses
+# apps em 1 réplica é o que derruba o host, não o norteia sozinho.
+#
+# Ordem importa na hora de mexer aqui: subir um destes pra 1 é uma decisão de
+# capacidade, não de configuração — medir antes (`kubectl describe node`).
+replicas:
+  - name: blueprint-backend
+    count: 0
+  - name: blueprint-frontend
+    count: 0
+  - name: blueprint-auth
+    count: 0
+  - name: blueprint-auth-frontend
+    count: 0
+  - name: guia-backend
+    count: 0
+  - name: guia-frontend
+    count: 0
+  - name: norteia-backend
+    count: 1
+  - name: norteia-frontend
+    count: 1
+  # O n8n real de produção roda no stack Compose do VPS, não aqui.
+  - name: n8n
+    count: 0
+  - name: n8n-worker
+    count: 0
+  - name: redis
+    count: 0

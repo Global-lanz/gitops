@@ -9,8 +9,14 @@ resources:
 # novo); qa/prod só avançam quando alguém trocar a tag aqui manualmente,
 # depois de testar em ambientes mais baixos. Escopado só ao norteia — não
 # afeta outros apps que usem a mesma imagem base (ex: guia).
+#
+# 1.4.0 -> 1.6.0/1.7.0: alinha prod com o que está rodando (e validado) em qa.
+# Não é cosmético — o embed SSO só existe a partir de backend 1.5.0
+# (POST /api/embed/session) e frontend 1.5.0 (CSP frame-ancestors +
+# EMBED_FALLBACK_URL na tela de login). Em 1.4.0 as chaves EMBED_* do
+# configmap são inertes e o endpoint responde 404.
 images:
   - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "1.4.0"
+    newTag: "1.6.0"
   - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "1.4.0"
+    newTag: "1.7.0"
