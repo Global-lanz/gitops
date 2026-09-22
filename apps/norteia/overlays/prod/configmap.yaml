@@ -15,7 +15,7 @@ data:
   # está (.../webhook/6b50add0-89fb-4ac0-b645-34465280e07f). O path curto
   # abaixo veio do stack Compose antigo e provavelmente não resolve no
   # workflow de produção; sem isso o chat aceita a mensagem e nunca responde.
-  N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/chat
+  N8N_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/6d29f33f-881b-4111-a192-bfb6d603f815
   N8N_EMAIL_WEBHOOK_URL: https://n8n.ionflux.cloud/webhook/welcome-email
   INITIAL_ADMIN_EMAIL: admin@norteia.ionflux.cloud
   INITIAL_ADMIN_USERNAME: admin
@@ -31,3 +31,6 @@ data:
   # responde 500). Múltiplos origins: separar por vírgula. Nunca wildcard.
   # EMBED_ALLOWED_ORIGIN: https://<origin-de-producao-do-app-host>
   # EMBED_FALLBACK_URL: https://<url-de-producao-do-app-host>
+  EMBED_ALLOWED_ORIGIN: https://meudua.com.br
+  EMBED_FALLBACK_URL: https://meudua.com.br
+
