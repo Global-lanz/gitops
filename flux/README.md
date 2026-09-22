@@ -149,8 +149,9 @@ Committed_AS  8.4 GB       against a 2 GB CommitLimit
 Restart counts had kept climbing: `coredns` 100, `traefik` 107, `helm-controller` 135,
 `source-watcher` 149. The node itself went `NotReady` and came back at 19:34 that day.
 
-**The new part is that this stopped being noise and started breaking a feature.** Two
-failures in `astra-api`, both downstream of the same starvation:
+**The new part is that this stopped being noise and started breaking a feature** — one
+feature, not two. This section originally listed the chat's WebSocket as a second victim;
+that was wrong, and item 2 below says why.
 
 ```
 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s114ms)
@@ -162,22 +163,27 @@ HikariPool-1 - Connection is not available, request timed out after 421980ms (to
    a transaction — seven minutes waiting for a connection from an empty pool. No push
    notification can leave this cluster while that is true.
 
-2. **The event chat's WebSocket never connected**, and the server's own stats said why:
+2. ~~**The event chat's WebSocket never connected**, because of the starvation.~~
+   **Wrong — corrected 2026-09-22.** The stats read
 
    ```
    WebSocketSession[0 current, 5 total, 0 closed abnormally (2 transport error)],
    stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)]
    ```
 
-   Five handshakes **succeeded** — so DNS, TLS, Traefik and the STOMP subprotocol are all
-   fine — and **zero CONNECT frames were ever processed**. A JVM that does not run for 54
-   seconds does not read the frame the client sent on open. The socket dies, and the phone
-   reports `1006 Software caused connection abort`, which reads exactly like a network
-   fault and is not one.
+   and on 2026-09-15 that was read as "the frozen JVM never read the CONNECT". After this
+   host was relieved, startup fell from 307 s to 68 s, no starvation warning appeared for
+   hours — and the stats said `CONNECT(0)` all the same.
 
-   That cost three rounds of client-side diagnosis — DNS, proxies blocking the upgrade,
-   the STOMP library — while `WebSocketMessageBrokerStats` had been printing the answer
-   into this log every thirty minutes the whole time.
+   The real cause was on the phone: React Native's WebSocket bridge chops text messages at
+   the NULL byte, and every STOMP frame ends in one. The server received an unterminated
+   CONNECT and correctly waited for the rest. Fixed in `astra-mobile/src/lib/stomp.ts` with
+   `forceBinaryWSFrames`; the full account is in `astra/docs/10-aprendizados.md`.
+
+   **Nothing in this cluster was ever wrong with WebSockets.** Traefik, TLS, the subprotocol
+   and compression were all verified with a real STOMP client through this ingress. The
+   lesson for this file is narrower: a starving host produces symptoms everywhere, and that
+   makes it a tempting explanation for every failure that happens at the same time.
 
 **Order of work, cheapest first.** The first two are the documented ones above; only the
 last is a cure:
