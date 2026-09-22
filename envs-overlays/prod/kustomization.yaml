@@ -1,6 +1,15 @@
 # Aggregates every app + per-env infra for `prod` into one path, so a single
 # Flux Kustomization (flux/flux-kustomization-prod.yaml) can sync the whole
 # environment. Toggling `prod` on/off = adding/removing that Flux Kustomization.
+
+# Todo objeto deste overlay pertence ao prod. Os overlays de app ja declaravam
+# `namespace: prod` cada um por si, mas o postgres-secret.enc.yaml nao declara
+# namespace nenhum (o sops-campo.ps1 escreve so metadata.name) -- e nem o Flux
+# Kustomization de prod usa targetNamespace. Sem esta linha o Secret ia parar
+# no `default` e o StatefulSet do Postgres jamais o acharia, falhando com o
+# secret "ausente" enquanto ele existia, no lugar errado.
+namespace: prod
+
 resources:
   - namespace.yaml
   - ../../apps/blueprint/overlays/prod
@@ -9,6 +18,7 @@ resources:
   - ../../apps/guia/overlays/prod
   - ../../apps/n8n/overlays/prod
   - postgres-helmrelease.yaml
+  - postgres-secret.enc.yaml
 
   # kafka-helmrelease.yaml desabilitado — mesma razão do qa: as imagens
   # bitnami/kafka e bitnami/zookeeper não são mais publicadas no Docker Hub

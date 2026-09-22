@@ -16,8 +16,20 @@ spec:
   values:
     auth:
       username: app
-      password: apppass
       database: blueprint
+      # A senha saiu daqui. Este repositorio e PUBLICO, e o valor anterior
+      # (`apppass`) esta no historico desde 25/jul, commit c91b985 -- rotacionar
+      # nao apaga o passado, so torna o passado inutil. Enquanto ele vivia neste
+      # arquivo, o DATABASE_URL cifrado com SOPS ao lado nao protegia nada: a
+      # mesma senha estava em claro a dez linhas de distancia.
+      #
+      # O usuario `app` fica: nao e segredo, ja nao e o `postgres` padrao, e
+      # troca-lo obrigaria a mexer nos OWNER do initdb e em todo DATABASE_URL
+      # sem ganho de seguranca.
+      existingSecret: postgres-prod-auth
+      secretKeys:
+        adminPasswordKey: postgres-password
+        userPasswordKey: password
     image:
       registry: docker.io
       repository: bitnami/postgresql
@@ -34,6 +46,25 @@ spec:
       replicaCount: 1
       persistence:
         size: 8Gi
+      # A policy que o chart cria por padrao tem `ingress: ports: [5432]` e
+      # NENHUM `from:` -- restringe a porta, nao a origem, entao qualquer pod de
+      # qualquer namespace alcanca o banco. Com allowExternal: false o chart
+      # passa a exigir, no pod cliente, o label
+      # `postgres-prod-postgresql-client: "true"` (adicionado ao norteia-backend
+      # via patch no kustomization deste overlay).
+      #
+      # podSelector sozinho vale so no mesmo namespace, entao o pgadmin (que
+      # roda em `tools`) precisa da excecao por namespace abaixo -- sem ela o
+      # restore pelo navegador para de funcionar. O label
+      # kubernetes.io/metadata.name e posto pelo proprio Kubernetes em todo
+      # namespace, nao depende de ninguem ter rotulado nada.
+      networkPolicy:
+        enabled: true
+        allowExternal: false
+        ingressNSMatchLabels:
+          kubernetes.io/metadata.name: tools
+        ingressNSPodMatchLabels:
+          app: pgadmin
       # Sem isto o Postgres de prod competia sem teto com o resto do nó
       # (1 vCPU / 4 GB, compartilhado com o stack Compose). Mesmos valores
       # do qa, que roda com folga nessa faixa.
