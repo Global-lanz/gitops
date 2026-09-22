@@ -36,17 +36,10 @@ replicas:
     count: 0
   - name: guia-frontend
     count: 0
-  # TEMPORÁRIO — janela de restore (2026-09-22). O norteia sobe em 0 de
-  # propósito para o postgres-prod nascer sozinho e o banco ser restaurado
-  # vazio pelo pgadmin ANTES de qualquer app tocar nele. Se o backend subisse
-  # junto, o `prisma db push` do boot criaria o schema em branco e o
-  # pg_restore bateria de frente com as tabelas já existentes.
-  # Passo seguinte, depois do restore: voltar os dois para 1 e dar push.
   - name: norteia-backend
-    count: 0
+    count: 1
   - name: norteia-frontend
-    count: 0
-  # O n8n real de produção roda no stack Compose do VPS, não aqui.
+    count: 1
   - name: n8n
     count: 0
   - name: n8n-worker
