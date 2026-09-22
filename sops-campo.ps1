@@ -144,7 +144,9 @@ if ($existia) {
 # ---------------------------------------------------------------- reescrever
 # O texto puro so existe num temporario fora do repositorio, apagado no
 # finally mesmo se algo falhar no meio -- igual ao recriar-secret.ps1.
-$tmp = Join-Path $env:TEMP ("sops-campo-" + [guid]::NewGuid().ToString() + ".yaml")
+$stamp  = [guid]::NewGuid().ToString()
+$tmp    = Join-Path $env:TEMP ("sops-campo-$stamp.yaml")
+$tmpCfg = Join-Path $env:TEMP ("sops-campo-$stamp.sops.yaml")
 
 try {
     $lines = @(
@@ -164,22 +166,46 @@ try {
 
     Set-Content -Path $tmp -Value $lines -Encoding ascii
 
-    # Nao chamar isto de $args: e variavel automatica do PowerShell.
-    $sopsArgs = @("encrypt", "--encrypted-regex", "^(data|stringData)$")
-    foreach ($r in $recipients) { $sopsArgs += @("--age", $r) }
-    $sopsArgs += $tmp
+    # O sops procura creation_rules para o caminho do arquivo que esta cifrando
+    # -- e o temporario vive no %TEMP%, que nao casa com nenhum path_regex do
+    # .sops.yaml do repo. Resultado: "error loading config: no matching
+    # creation rules found", mesmo passando --age explicito. Passar --age NAO
+    # dispensa a checagem de regras.
+    #
+    # Entao damos ao sops um config proprio, ao lado do temporario, com uma
+    # regra que casa com ele e carrega os mesmos recipients do repo. Nada de
+    # escrever texto puro dentro do repositorio so para o path_regex bater.
+    #
+    # A descoberta do .sops.yaml e pelo CWD, entao o erro so aparece quando se
+    # roda de dentro do repo -- de outro diretorio o mesmo comando passa, o que
+    # torna a falha confusamente intermitente.
+    #
+    # Atencao a posicao: --config e flag GLOBAL do sops e tem de vir ANTES do
+    # subcomando. `sops encrypt --config X` falha com "flag provided but not
+    # defined: -config"; o certo e `sops --config X encrypt`.
+    $cfgLines = @(
+        "creation_rules:",
+        "  - path_regex: .*",
+        "    encrypted_regex: ^(data|stringData)$",
+        "    age: $($recipients -join ',')"
+    )
+    Set-Content -Path $tmpCfg -Value $cfgLines -Encoding ascii
 
-    $cifrado = & sops @sopsArgs
+    $cifrado = & { $ErrorActionPreference = 'Continue'
+                   sops --config $tmpCfg encrypt $tmp 2>&1 }
     if ($LASTEXITCODE -ne 0) {
         Write-Host "sops encrypt falhou. O arquivo original NAO foi tocado." -ForegroundColor Red
+        $cifrado | Select-Object -First 8 | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
         exit 1
     }
 
     Set-Content -Path $Arquivo -Value $cifrado -Encoding ascii
 }
 finally {
-    if (Test-Path $tmp) { Remove-Item -Force $tmp }
-    Remove-Variable campos, lines, v, cifrado -ErrorAction SilentlyContinue
+    # O texto puro e o config saem juntos, aconteca o que acontecer.
+    if (Test-Path $tmp)    { Remove-Item -Force $tmp }
+    if (Test-Path $tmpCfg) { Remove-Item -Force $tmpCfg }
+    Remove-Variable campos, lines, v, cifrado, cfgLines -ErrorAction SilentlyContinue
 }
 
 # ---------------------------------------------------------------- conferir
