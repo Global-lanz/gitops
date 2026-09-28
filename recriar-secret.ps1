@@ -74,8 +74,14 @@ if (Test-Path $target) {
 # STAFF_BOOTSTRAP_*: a primeira administradora do painel (ADR-0015). A API cria essa
 # conta uma unica vez, na subida, quando nao existe admin nenhuma - depois disso estes
 # dois valores deixam de importar, e trocar a senha aqui NAO muda a conta.
+#
+# JWT_SECRET: a chave que assina os tokens de login. Sem ela a API usa a chave de
+# desenvolvimento escrita no application.yml, e quem leu o codigo consegue montar um
+# token valido no QA - inclusive um de admin do painel. Ninguem precisa saber o valor:
+# vazio hoje, Enter gera uma chave aleatoria. Trocar a chave so derruba os tokens de
+# acesso (15 min); o app e o painel renovam sozinhos.
 $campos = @("DB_URL", "DB_USER", "DB_PASSWORD", "STORAGE_ACCESS_KEY", "STORAGE_SECRET_KEY",
-            "STAFF_BOOTSTRAP_EMAIL", "STAFF_BOOTSTRAP_PASSWORD")
+            "JWT_SECRET", "STAFF_BOOTSTRAP_EMAIL", "STAFF_BOOTSTRAP_PASSWORD")
 $novo = @{}
 
 Write-Host ""
@@ -94,6 +100,8 @@ foreach ($campo in $campos) {
             $dica = "definido, $($atual[$campo].Length) caracteres"
         }
         $resposta = Read-Host "$campo [$dica]"
+    } elseif ($campo -eq "JWT_SECRET") {
+        $resposta = Read-Host "$campo (vazio hoje - Enter gera uma chave aleatoria)"
     } else {
         $resposta = Read-Host "$campo (vazio hoje, precisa preencher)"
     }
@@ -101,6 +109,12 @@ foreach ($campo in $campos) {
     if ([string]::IsNullOrWhiteSpace($resposta)) {
         if ($tem) {
             $novo[$campo] = $atual[$campo]
+        } elseif ($campo -eq "JWT_SECRET") {
+            # 48 bytes aleatorios = 64 caracteres em base64, o dobro do minimo da API.
+            $bytes = New-Object byte[] 48
+            [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+            $novo[$campo] = [Convert]::ToBase64String($bytes)
+            Write-Host "  chave gerada ($($novo[$campo].Length) caracteres)" -ForegroundColor Green
         } else {
             Write-Host "$campo nao tem valor atual e ficou vazio. Nada foi alterado." -ForegroundColor Red
             exit 1
@@ -113,6 +127,10 @@ foreach ($campo in $campos) {
 # A API recusa subir com uma senha de bootstrap curta (StaffProperties.validate) - de
 # proposito, para nao criar uma admin com senha fraca. Barrado aqui, antes de gravar,
 # em vez de descoberto como um pod reiniciando em loop no QA.
+if ($novo["JWT_SECRET"].Length -lt 32) {
+    Write-Host "JWT_SECRET precisa de pelo menos 32 caracteres. Nada foi alterado." -ForegroundColor Red
+    exit 1
+}
 if ($novo["STAFF_BOOTSTRAP_PASSWORD"].Length -lt 12) {
     Write-Host "STAFF_BOOTSTRAP_PASSWORD precisa de pelo menos 12 caracteres. Nada foi alterado." -ForegroundColor Red
     exit 1
@@ -146,7 +164,14 @@ try {
 
     Set-Content -Path $tmp -Value $lines -Encoding ascii
 
-    $cifrado = sops encrypt --age $recipient --encrypted-regex "^(data|stringData)$" $tmp
+    # O texto puro fica no TEMP, fora do repo. O sops escolhe a regra de cifra pelo
+    # caminho do arquivo, e nenhuma regra do .sops.yaml casa com um caminho no TEMP:
+    # rodando de dentro do gitops (onde ele acha o .sops.yaml), falhava com "no
+    # matching creation rules found". --filename-override faz a regra ser escolhida
+    # pelo caminho de destino; --config fixa o .sops.yaml, de qualquer pasta que o
+    # script seja chamado.
+    $cifrado = sops --config $sopsYaml encrypt --filename-override $target `
+        --age $recipient --encrypted-regex "^(data|stringData)$" $tmp
     if ($LASTEXITCODE -ne 0) {
         Write-Host "sops encrypt falhou. O arquivo antigo NAO foi tocado." -ForegroundColor Red
         exit 1
