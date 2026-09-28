@@ -16,7 +16,7 @@ resources:
 # o campo `version` mostra a tag exata da imagem em execucao.
 images:
   - name: maiconlanzendorf/astra-api
-    newTag: "RC.20260928.002"
+    newTag: "RC.20260928.003"
   # Painel da equipe: RC publicada pela label `RC` num PR do repositorio astra-admin.
   # O contador e dele, separado do da API. Confira no rodape de
   # https://admin.astra-qa.ionflux.cloud.
@@ -24,4 +24,4 @@ images:
   # TROCAR antes do commit pela RC que o comentario do PR informar — esta tag nao
   # existe, e o pod ficaria em ImagePullBackOff (a API nao e afetada).
   - name: maiconlanzendorf/astra-admin
-    newTag: "RC.20260928.001"
+    newTag: "RC.20260928.002"
