@@ -71,7 +71,11 @@ if (Test-Path $target) {
 }
 
 # ---------------------------------------------------------------- perguntar
-$campos = @("DB_URL", "DB_USER", "DB_PASSWORD", "STORAGE_ACCESS_KEY", "STORAGE_SECRET_KEY")
+# STAFF_BOOTSTRAP_*: a primeira administradora do painel (ADR-0015). A API cria essa
+# conta uma unica vez, na subida, quando nao existe admin nenhuma - depois disso estes
+# dois valores deixam de importar, e trocar a senha aqui NAO muda a conta.
+$campos = @("DB_URL", "DB_USER", "DB_PASSWORD", "STORAGE_ACCESS_KEY", "STORAGE_SECRET_KEY",
+            "STAFF_BOOTSTRAP_EMAIL", "STAFF_BOOTSTRAP_PASSWORD")
 $novo = @{}
 
 Write-Host ""
@@ -104,6 +108,14 @@ foreach ($campo in $campos) {
     } else {
         $novo[$campo] = $resposta.Trim()
     }
+}
+
+# A API recusa subir com uma senha de bootstrap curta (StaffProperties.validate) - de
+# proposito, para nao criar uma admin com senha fraca. Barrado aqui, antes de gravar,
+# em vez de descoberto como um pod reiniciando em loop no QA.
+if ($novo["STAFF_BOOTSTRAP_PASSWORD"].Length -lt 12) {
+    Write-Host "STAFF_BOOTSTRAP_PASSWORD precisa de pelo menos 12 caracteres. Nada foi alterado." -ForegroundColor Red
+    exit 1
 }
 
 # ---------------------------------------------------------------- escrever
