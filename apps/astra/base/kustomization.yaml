@@ -1,3 +1,7 @@
 resources:
   - api-deployment.yaml
   - api-service.yaml
+  # Painel da equipe. O nginx dele faz proxy de /api para o Service astra-api acima e
+  # resolve esse nome na subida: os dois andam juntos no mesmo namespace.
+  - admin-deployment.yaml
+  - admin-service.yaml

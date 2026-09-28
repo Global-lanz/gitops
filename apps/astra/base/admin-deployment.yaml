@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: astra-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: astra-admin
+  template:
+    metadata:
+      labels:
+        app: astra-admin
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        # nginx-unprivileged: o usuario nginx da imagem e 101/101. Numerico pelo mesmo
+        # motivo do astra-api — sem isto o kubelet nao consegue provar que nao e root.
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: astra-admin
+          image: maiconlanzendorf/astra-admin:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            # O mesmo nome de ambiente que a API usa, lido do ConfigMap de cada overlay:
+            # o selo do painel nunca diz QA enquanto a API diz outra coisa. Uma chave so,
+            # nao o envFrom inteiro — o painel nao precisa do resto, nem do Secret.
+            - name: ASTRA_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: astra-config
+                  key: ASTRA_ENVIRONMENT
+          resources:
+            # nginx servindo arquivos estaticos e fazendo proxy para a API: alguns MB.
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 20
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            # As duas unicas escritas do nginx-unprivileged: pid e arquivos temporarios
+            # em /tmp, e o default.conf que a imagem gera do template na subida.
+            #
+            # Sem o conf.d gravavel, a imagem NAO falha: pula o template com um aviso no
+            # log e sobe com o default.conf dela — a pagina "Welcome to nginx" no lugar
+            # do painel, e sem o proxy da API.
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: nginx-conf
+          emptyDir: {}
