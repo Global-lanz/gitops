@@ -20,3 +20,4 @@ data:
   # Host de LEITURA, diferente do endpoint de escrita acima. O bucket precisa
   # estar marcado como publico no Supabase para esta URL responder.
   STORAGE_PUBLIC_BASE_URL: https://gyluevludierlvfytmgw.storage.supabase.co/storage/v1/object/public/astra-qa
+  STORAGE_PRIVATE_BUCKET: astra-qa-private
