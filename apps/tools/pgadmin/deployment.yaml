@@ -54,12 +54,15 @@ spec:
               port: 80
             initialDelaySeconds: 20
             periodSeconds: 10
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
               path: /misc/ping
               port: 80
             initialDelaySeconds: 60
             periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
       volumes:
         - name: pgadmin-data
           persistentVolumeClaim:
