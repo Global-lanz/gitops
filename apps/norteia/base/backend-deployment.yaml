@@ -15,7 +15,7 @@ spec:
       containers:
         - name: norteia-backend
           # Product image is still published as n8n-chat-backend upstream.
-          image: maiconlanzendorf/n8n-chat-backend:1.4.0
+          image: maiconlanzendorf/n8n-chat-backend:1.7.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

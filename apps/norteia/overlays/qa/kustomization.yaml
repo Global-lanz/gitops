@@ -9,8 +9,8 @@ resources:
 # novo); qa/prod só avançam quando alguém trocar a tag aqui manualmente,
 # depois de testar em ambientes mais baixos. Escopado só ao norteia — não
 # afeta outros apps que usem a mesma imagem base (ex: guia).
-images:
-  - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "RC.20261003.001"
-  - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "1.7.0"
+# images:
+#   - name: maiconlanzendorf/n8n-chat-backend
+#     newTag: "1.7.0"
+#   - name: maiconlanzendorf/n8n-chat-frontend
+#     newTag: "1.7.0"

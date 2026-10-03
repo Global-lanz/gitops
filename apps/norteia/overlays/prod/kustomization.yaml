@@ -15,11 +15,11 @@ resources:
 # (POST /api/embed/session) e frontend 1.5.0 (CSP frame-ancestors +
 # EMBED_FALLBACK_URL na tela de login). Em 1.4.0 as chaves EMBED_* do
 # configmap são inertes e o endpoint responde 404.
-images:
-  - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "1.6.0"
-  - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "1.7.0"
+# images:
+#   - name: maiconlanzendorf/n8n-chat-backend
+#     newTag: "1.6.0"
+#   - name: maiconlanzendorf/n8n-chat-frontend
+#     newTag: "1.7.0"
 
 # A NetworkPolicy do postgres-prod passou a exigir este label de quem conecta
 # (allowExternal: false no HelmRelease do overlay de prod). Sem ele o backend
