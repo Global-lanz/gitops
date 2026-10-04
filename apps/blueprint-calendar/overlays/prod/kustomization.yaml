@@ -9,11 +9,11 @@ resources:
 # depois de testar em ambientes mais baixos.
 #
 # TROCAR pela primeira versao final (x.y.z) publicada pelo CI.
-images:
-  - name: maiconlanzendorf/blueprint-calendar-backend
-    newTag: "0.1.0"
-  - name: maiconlanzendorf/blueprint-calendar-frontend
-    newTag: "0.1.0"
+# images:
+#   - name: maiconlanzendorf/blueprint-calendar-backend
+#     newTag: "0.1.0"
+#   - name: maiconlanzendorf/blueprint-calendar-frontend
+#     newTag: "0.1.0"
 
 # A NetworkPolicy do postgres-prod exige este label de quem conecta
 # (allowExternal: false no HelmRelease de envs-overlays/prod). Sem ele o

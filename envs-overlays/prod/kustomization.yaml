@@ -27,8 +27,9 @@ resources:
   # em prod consome Kafka hoje (o astra decidiu não usar no MVP).
   # - kafka-helmrelease.yaml
 
-# Só o norteia sobe em prod. O resto fica em 0 pelo mesmo motivo do qa: o nó
-# é 1 vCPU / 4 GB, já está com ~58% de CPU requisitada e divide a máquina com
+# Sobem em prod: norteia, o Calendário editorial (backend + frontend) e o
+# blueprint-auth + portal, sem os quais ninguém faz login no calendário. O
+# resto fica em 0 pelo mesmo motivo do qa: o nó é 1 vCPU / 4 GB, já está com ~58% de CPU requisitada e divide a máquina com
 # o stack Docker Compose de produção. Ligar o Flux de prod com todos esses
 # apps em 1 réplica é o que derruba o host, não o norteia sozinho.
 #
@@ -36,17 +37,17 @@ resources:
 # capacidade, não de configuração — medir antes (`kubectl describe node`).
 replicas:
   - name: blueprint-backend
-    count: 0
+    count: 1
   - name: blueprint-frontend
-    count: 0
+    count: 1
   - name: blueprint-auth
-    count: 0
+    count: 1
   - name: blueprint-auth-frontend
-    count: 0
+    count: 1
   - name: guia-backend
-    count: 0
+    count: 1
   - name: guia-frontend
-    count: 0
+    count: 1
   - name: norteia-backend
     count: 1
   - name: norteia-frontend
@@ -58,6 +59,6 @@ replicas:
   - name: redis
     count: 0
   - name: blueprint-calendar-backend
-    count: 0
+    count: 1
   - name: blueprint-calendar-frontend
-    count: 0
+    count: 1

@@ -15,7 +15,7 @@ spec:
       containers:
         - name: blueprint-calendar-frontend
           # TROCAR pela primeira versao publicada pelo CI (ver backend).
-          image: maiconlanzendorf/blueprint-calendar-frontend:0.1.0
+          image: maiconlanzendorf/blueprint-calendar-frontend:0.2.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

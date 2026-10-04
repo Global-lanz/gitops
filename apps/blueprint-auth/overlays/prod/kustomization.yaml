@@ -7,8 +7,21 @@ resources:
 # Pin da versão promovida pro prod. dev acompanha o base direto (sempre mais
 # novo); qa/prod só avançam quando alguém trocar a tag aqui manualmente,
 # depois de testar em ambientes mais baixos.
-images:
-  - name: maiconlanzendorf/blueprint-auth
-    newTag: "0.2.0"
-  - name: maiconlanzendorf/blueprint-auth-frontend
-    newTag: "0.3.0"
+# images:
+#   - name: maiconlanzendorf/blueprint-auth
+#     newTag: "0.2.0"
+#   - name: maiconlanzendorf/blueprint-auth-frontend
+#     newTag: "0.3.0"
+
+# A NetworkPolicy do postgres-prod exige este label de quem conecta
+# (allowExternal: false no HelmRelease de envs-overlays/prod). Sem ele o
+# blueprint-auth sobe e cai no `prisma db push` do entrypoint. Só o deployment
+# da API leva o label: o portal é nginx e não fala com o banco.
+patches:
+  - target:
+      kind: Deployment
+      name: blueprint-auth
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/postgres-prod-postgresql-client
+        value: "true"
