@@ -35,6 +35,10 @@ replicas:
     count: 1
   - name: blueprint-auth-frontend
     count: 1
+  - name: blueprint-calendar-backend
+    count: 1
+  - name: blueprint-calendar-frontend
+    count: 1
   - name: guia-backend
     count: 0
   - name: guia-frontend
@@ -50,14 +54,4 @@ replicas:
   - name: redis
     count: 0
   - name: astra-api
-    count: 0
-  # blueprint-calendar em 0 ate (1) a imagem ser publicada pelo CI e a tag RC
-  # trocada em apps/blueprint-calendar/overlays/qa/kustomization.yaml, (2) o
-  # database blueprint_calendar ser criado a mao no postgres-qa (o initdb so
-  # roda em volume novo) e (3) os placeholders do secret serem trocados. Sem
-  # isso e ImagePullBackOff/crashloop num no de 1 vCPU. Subir para 1 e decisao
-  # de capacidade: medir antes (`kubectl describe node`).
-  - name: blueprint-calendar-backend
-    count: 0
-  - name: blueprint-calendar-frontend
     count: 0
