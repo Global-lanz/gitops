@@ -12,6 +12,6 @@ resources:
 # existe no Docker Hub; com ela o pod fica em ImagePullBackOff.
 images:
   - name: maiconlanzendorf/blueprint-calendar-backend
-    newTag: "RC.20261004.004"
+    newTag: "RC.20261004.006"
   - name: maiconlanzendorf/blueprint-calendar-frontend
-    newTag: "RC.20261004.007"
+    newTag: "RC.20261004.009"
