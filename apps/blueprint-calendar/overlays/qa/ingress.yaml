@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blueprint-calendar-frontend
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: calendario-qa.ionflux.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-calendar-frontend
+                port:
+                  number: 80

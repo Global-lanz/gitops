@@ -1,0 +1,29 @@
+namespace: prod
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.enc.yaml
+  - ingress.yaml
+# Pin da versao promovida pro prod. dev acompanha o base direto (sempre mais
+# novo); qa/prod so avancam quando alguem trocar a tag aqui manualmente,
+# depois de testar em ambientes mais baixos.
+#
+# TROCAR pela primeira versao final (x.y.z) publicada pelo CI.
+images:
+  - name: maiconlanzendorf/blueprint-calendar-backend
+    newTag: "0.1.0"
+  - name: maiconlanzendorf/blueprint-calendar-frontend
+    newTag: "0.1.0"
+
+# A NetworkPolicy do postgres-prod exige este label de quem conecta
+# (allowExternal: false no HelmRelease de envs-overlays/prod). Sem ele o
+# backend sobe e so falha ao abrir conexao -- o `prisma db push` do entrypoint
+# derruba o container no start. So o backend leva o label: o frontend e nginx.
+patches:
+  - target:
+      kind: Deployment
+      name: blueprint-calendar-backend
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/postgres-prod-postgresql-client
+        value: "true"

@@ -5,6 +5,7 @@ resources:
   - namespace.yaml
   - ../../apps/blueprint/overlays/dev
   - ../../apps/blueprint-auth/overlays/dev
+  - ../../apps/blueprint-calendar/overlays/dev
   - ../../apps/norteia/overlays/dev
   - ../../apps/guia/overlays/dev
   - ../../apps/n8n/overlays/dev

@@ -1,0 +1,14 @@
+# O nome deste Service e contrato: o nginx.conf do blueprint-calendar-frontend
+# faz proxy_pass para http://blueprint-calendar-backend:3500 (mesmo namespace).
+# Renomear aqui quebra o /api do frontend.
+apiVersion: v1
+kind: Service
+metadata:
+  name: blueprint-calendar-backend
+spec:
+  selector:
+    app: blueprint-calendar-backend
+  ports:
+    - name: http
+      port: 3500
+      targetPort: 3500

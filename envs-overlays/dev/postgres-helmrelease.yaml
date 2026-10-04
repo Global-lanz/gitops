@@ -37,3 +37,4 @@ spec:
             CREATE DATABASE norteiadb OWNER app;
             CREATE DATABASE guiadb OWNER app;
             CREATE DATABASE n8ndb OWNER app;
+            CREATE DATABASE blueprint_calendar OWNER app;

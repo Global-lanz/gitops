@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blueprint-calendar-config
+data:
+  PORT: "3500"
+  # Base relativa: o nginx do frontend faz proxy de /api/ ->
+  # blueprint-calendar-backend:3500. Mesma origem, sem CORS.
+  API_URL: /api
+  CORS_ORIGIN: https://calendario.ionflux.cloud
+  # blueprint-auth nao tem ingress: e alcancado so por dentro do namespace.
+  AUTH_BASE_URL: http://blueprint-auth:3400
+  # Portal central de login (mesmo valor que o blueprint usa em AUTH_PORTAL_URL).
+  AUTH_PORTAL_URL: https://auth.blueprint.ionflux.cloud
+  MODULE_KEY: calendario

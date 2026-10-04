@@ -1,0 +1,17 @@
+namespace: qa
+resources:
+  - ../../base
+  - configmap.yaml
+  - secret.enc.yaml
+  - ingress.yaml
+# Pin da versao promovida pro QA. dev acompanha o base direto (sempre mais
+# novo); qa/prod so avancam quando alguem trocar a tag aqui manualmente,
+# depois de testar em ambientes mais baixos.
+#
+# TROCAR pela RC que o CI publicar (label `RC` no PR) — esta tag ainda nao
+# existe no Docker Hub; com ela o pod fica em ImagePullBackOff.
+images:
+  - name: maiconlanzendorf/blueprint-calendar-backend
+    newTag: "RC.20261004.001"
+  - name: maiconlanzendorf/blueprint-calendar-frontend
+    newTag: "RC.20261004.001"
