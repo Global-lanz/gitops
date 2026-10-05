@@ -16,7 +16,7 @@ spec:
         - name: blueprint-calendar-backend
           # TROCAR pela primeira versao publicada pelo CI. O package.json do
           # projeto ainda esta em 0.0.0 e nenhuma imagem existe no Docker Hub.
-          image: maiconlanzendorf/blueprint-calendar-backend:0.1.1
+          image: maiconlanzendorf/blueprint-calendar-backend:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3500
