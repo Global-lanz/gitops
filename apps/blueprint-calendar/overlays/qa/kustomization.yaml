@@ -11,7 +11,7 @@ resources:
 # TROCAR pela RC que o CI publicar (label `RC` no PR) — esta tag ainda nao
 # existe no Docker Hub; com ela o pod fica em ImagePullBackOff.
 images:
-  # - name: maiconlanzendorf/blueprint-calendar-backend
-  #   newTag: "RC.20261004.006"
+  - name: maiconlanzendorf/blueprint-calendar-backend
+    newTag: "RC.20261005.001"
   - name: maiconlanzendorf/blueprint-calendar-frontend
-    newTag: "RC.20261004.011"
+    newTag: "RC.20261005.001"
