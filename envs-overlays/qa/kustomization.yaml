@@ -55,3 +55,5 @@ replicas:
     count: 0
   - name: astra-api
     count: 0
+  - name: astra-admin
+    count: 0
