@@ -54,6 +54,6 @@ replicas:
   - name: redis
     count: 0
   - name: astra-api
-    count: 1
+    count: 0
   - name: astra-admin
-    count: 1
+    count: 0
