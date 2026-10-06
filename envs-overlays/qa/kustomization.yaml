@@ -32,13 +32,13 @@ replicas:
   - name: blueprint-frontend
     count: 0
   - name: blueprint-auth
-    count: 0
+    count: 1
   - name: blueprint-auth-frontend
-    count: 0
+    count: 1
   - name: blueprint-calendar-backend
-    count: 0
+    count: 1
   - name: blueprint-calendar-frontend
-    count: 0
+    count: 1
   - name: guia-backend
     count: 0
   - name: guia-frontend
