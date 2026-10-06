@@ -22,6 +22,6 @@ resources:
 # existe, e o pod ficaria em ImagePullBackOff (a API nao e afetada).
 images:
   - name: maiconlanzendorf/astra-api
-    newTag: "RC.20261005.002"
+    newTag: "RC.20261006.001"
   - name: maiconlanzendorf/astra-admin
-    newTag: "RC.20261005.002"
+    newTag: "RC.20261006.001"
