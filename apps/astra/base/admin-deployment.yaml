@@ -74,7 +74,14 @@ spec:
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d
       volumes:
+        # Em memoria (tmpfs), nao no disco do no (ADR-0017; docs/15 5.4): o
+        # proxy_temp e o client_temp do nginx ficam em /tmp, e uma imagem de documento
+        # em transito nao pode parar no disco do VPS. O nginx.conf.template ja desliga
+        # o arquivo temporario do proxy em /api/ (proxy_max_temp_file_size 0); isto e
+        # a segunda barreira. Conta no limite de 64Mi do container; hoje ~2Mi em uso.
         - name: tmp
-          emptyDir: {}
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Mi
         - name: nginx-conf
           emptyDir: {}

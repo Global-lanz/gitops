@@ -42,12 +42,20 @@ spec:
             # ajustada no Dockerfile (SerialGC, MaxRAMPercentage=70, Xss512k) para
             # caber aqui. Se o pod for morto por OOM, suba o limite antes de mexer
             # no codigo — 512Mi e o piso realista para Spring Boot com JPA.
+            #
+            # 640Mi desde o ADR-0017: o pod de qa caiu em 05/10 com
+            # "OutOfMemoryError: Metaspace" (teto de 128m), e a marca d'agua carrega
+            # Java2D/ImageIO, mais classes ainda. O Dockerfile sobe o metaspace para
+            # 192m e baixa o MaxRAMPercentage para 55 -- o heap fica no mesmo tamanho
+            # de antes (~350Mi). O /tmp em memoria (abaixo) tambem conta neste limite.
+            # Este limite pode ir para a main ANTES da imagem nova (a antiga cabe);
+            # a imagem nova com o limite antigo de 512Mi teria heap menor que hoje.
             requests:
               cpu: 100m
-              memory: 384Mi
+              memory: 448Mi
             limits:
               cpu: 750m
-              memory: 512Mi
+              memory: 640Mi
           startupProbe:
             # Spring Boot leva ~20-40s para subir num vCPU compartilhado. Sem esta
             # probe o liveness mata o pod antes de ele terminar de iniciar.
@@ -77,8 +85,16 @@ spec:
             capabilities:
               drop: ["ALL"]
           volumeMounts:
+            # Unica escrita da API: pastas do Tomcat, o arquivo temporario do
+            # Font.createFont (marca d'agua) e o cache do fontconfig.
             - name: tmp
               mountPath: /tmp
       volumes:
+        # Em memoria (tmpfs), nao no disco do no (ADR-0017; docs/15 5.1 e 5.8): se um
+        # upload de documento cair em arquivo temporario, ele some com o pod em vez de
+        # ficar no disco do VPS. O uso conta no limite de memoria do container; hoje
+        # sao ~100KB. sizeLimit estourado = pod despejado, nunca disco cheio.
         - name: tmp
-          emptyDir: {}
+          emptyDir:
+            medium: Memory
+            sizeLimit: 32Mi

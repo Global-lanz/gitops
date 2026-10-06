@@ -32,13 +32,13 @@ replicas:
   - name: blueprint-frontend
     count: 0
   - name: blueprint-auth
-    count: 1
+    count: 0
   - name: blueprint-auth-frontend
-    count: 1
+    count: 0
   - name: blueprint-calendar-backend
-    count: 1
+    count: 0
   - name: blueprint-calendar-frontend
-    count: 1
+    count: 0
   - name: guia-backend
     count: 0
   - name: guia-frontend
@@ -54,6 +54,6 @@ replicas:
   - name: redis
     count: 0
   - name: astra-api
-    count: 0
+    count: 1
   - name: astra-admin
-    count: 0
+    count: 1

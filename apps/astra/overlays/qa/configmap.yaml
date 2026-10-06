@@ -21,3 +21,9 @@ data:
   # estar marcado como publico no Supabase para esta URL responder.
   STORAGE_PUBLIC_BASE_URL: https://gyluevludierlvfytmgw.storage.supabase.co/storage/v1/object/public/astra-qa
   STORAGE_PRIVATE_BUCKET: astra-qa-private
+  # Swagger e /v3/api-docs LIGADOS no qa: o openapi.json do orval sai daqui e da
+  # maquina local. O overlay de prod (ainda nao existe) precisa ter os dois em "false".
+  # O Spring liga estas variaveis a springdoc.api-docs.enabled e
+  # springdoc.swagger-ui.enabled sem precisar de linha no application.yml.
+  SPRINGDOC_API_DOCS_ENABLED: "true"
+  SPRINGDOC_SWAGGER_UI_ENABLED: "true"
