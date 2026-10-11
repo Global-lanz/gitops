@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: blueprint-auth-frontend
-          image: maiconlanzendorf/blueprint-auth-frontend:1.0.1
+          image: maiconlanzendorf/blueprint-auth-frontend:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
