@@ -20,6 +20,7 @@ resources:
   - ../../apps/n8n/overlays/prod
   - postgres-helmrelease.yaml
   - postgres-secret.enc.yaml
+  - backup-cronjob.yaml
 
   # kafka-helmrelease.yaml desabilitado — mesma razão do qa: as imagens
   # bitnami/kafka e bitnami/zookeeper não são mais publicadas no Docker Hub

@@ -1,0 +1,104 @@
+# Backup diario do Postgres de prod no disco do VPS (hostPath), para o n8n
+# pegar depois e mandar ao Google Drive.
+#
+# Layout no host:  <HOST_DIR>/AAAAMMDD/<servico>_AAAAMMDD_HHMM.backup
+# Formato: pg_dump -Fc (custom) -> restaurar com `pg_restore -d <db> arquivo.backup`.
+#
+# Nome do arquivo = servico (nao o nome do banco). Mapa servico -> banco:
+#   blueprint_backend          -> blueprint
+#   blueprint_auth_backend     -> blueprint_auth
+#   blueprint_calendar_backend -> blueprint_calendar
+#   norteia_backend            -> norteiadb
+#   guia_backend               -> guiadb
+#   n8n                        -> n8ndb
+#
+# Ao criar um banco novo em prod, adicione-o na lista SERVICES abaixo.
+#
+# Escreve em arquivo .tmp e so renomeia no fim: quem for ler a pasta (n8n) nunca
+# ve dump pela metade. Se algum banco falhar o Job termina com erro (os demais
+# ainda sao tentados), entao o `kubectl get job -n prod` mostra Failed.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: prod
+spec:
+  schedule: "0 3 * * *"
+  timeZone: America/Sao_Paulo
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            # Exigido pela NetworkPolicy do Postgres (allowExternal: false).
+            postgres-prod-postgresql-client: "true"
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: backup
+              # pg_dump 16 = mesmo major do servidor (16.4).
+              image: postgres:16
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TZ
+                  value: America/Sao_Paulo
+                - name: PGHOST
+                  value: postgres-prod-postgresql
+                - name: PGUSER
+                  value: app
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-prod-auth
+                      key: password
+                - name: SERVICES
+                  value: >-
+                    blueprint_backend:blueprint
+                    blueprint_auth_backend:blueprint_auth
+                    blueprint_calendar_backend:blueprint_calendar
+                    norteia_backend:norteiadb
+                    guia_backend:guiadb
+                    n8n:n8ndb
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  DAY=$(date +%Y%m%d)
+                  STAMP=$(date +%Y%m%d_%H%M)
+                  DIR=/backup/$DAY
+                  mkdir -p "$DIR"
+                  fail=0
+                  for entry in $SERVICES; do
+                    svc=${entry%%:*}
+                    db=${entry##*:}
+                    out="$DIR/${svc}_${STAMP}.backup"
+                    if pg_dump -Fc -d "$db" -f "$out.tmp"; then
+                      mv "$out.tmp" "$out"
+                      echo "OK   $out"
+                    else
+                      rm -f "$out.tmp"
+                      echo "FAIL $svc ($db)" >&2
+                      fail=1
+                    fi
+                  done
+                  exit $fail
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: backup
+              hostPath:
+                # hostPath nao expande `~`: precisa ser absoluto. Ajuste se o
+                # usuario do VPS nao for root (ex.: /home/<usuario>/backup).
+                path: /root/backup
+                type: DirectoryOrCreate
