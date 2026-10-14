@@ -40,8 +40,10 @@ spec:
           restartPolicy: Never
           containers:
             - name: backup
-              # pg_dump 16 = mesmo major do servidor (16.4).
-              image: postgres:16
+              # pg_dump precisa ser >= o major do servidor. Prod roda 18.4 (o `latest` do
+              # bitnami andou desde que o comentario do HelmRelease dizia 16.4).
+              # Se o servidor subir de major, suba esta tag junto.
+              image: postgres:18
               imagePullPolicy: IfNotPresent
               env:
                 - name: TZ
