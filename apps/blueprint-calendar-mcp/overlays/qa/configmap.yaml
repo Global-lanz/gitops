@@ -10,7 +10,7 @@ data:
   CALENDAR_API_URL: http://blueprint-calendar-backend:3500/api
   # Obrigatorio em producao (sem ele o processo nao sobe). Sem porta = aceita qualquer porta.
   # O Traefik repassa o Host original, entao e o host publico. /health ignora essa checagem.
-  MCP_ALLOWED_HOSTS: calendario-mcp-qa.ionflux.cloud
+  MCP_ALLOWED_HOSTS: mcp.calendario-qa.ionflux.cloud
   # Origens de navegador permitidas. Omitido de proposito: vazio = qualquer requisicao COM
   # cabecalho Origin recebe 403 (seguro). Claude Code/Desktop nao enviam Origin. So preencher
   # se um inspetor MCP hospedado for usado.

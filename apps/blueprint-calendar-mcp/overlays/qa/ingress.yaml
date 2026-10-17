@@ -13,10 +13,10 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - calendario-mcp-qa.ionflux.cloud
+        - mcp.calendario-qa.ionflux.cloud
       # secretName: calendario-mcp-qa-tls   # definir quando a origem do certificado for decidida
   rules:
-    - host: calendario-mcp-qa.ionflux.cloud
+    - host: mcp.calendario-qa.ionflux.cloud
       http:
         paths:
           - path: /
