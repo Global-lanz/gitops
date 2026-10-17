@@ -42,11 +42,11 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 48Mi
+              memory: 96Mi
             limits:
               cpu: 100m
-              memory: 64Mi
-          # Unico local gravavel (Node pode precisar de /tmp). Em memoria.
+              memory: 128Mi
+          # Unico local gravavel (Node pode precisar de /tmp). Em memoria (conta no limit de memoria).
           volumeMounts:
             - name: tmp
               mountPath: /tmp
