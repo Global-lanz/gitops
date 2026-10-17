@@ -6,6 +6,7 @@ resources:
   - ../../apps/blueprint/overlays/qa
   - ../../apps/blueprint-auth/overlays/qa
   - ../../apps/blueprint-calendar/overlays/qa
+  - ../../apps/blueprint-calendar-mcp/overlays/qa
   - ../../apps/norteia/overlays/qa
   - ../../apps/guia/overlays/qa
   - ../../apps/n8n/overlays/qa
