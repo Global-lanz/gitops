@@ -1,0 +1,28 @@
+# O Bearer bpc_ trafega neste host: so HTTPS. A origem do certificado ainda e
+# decisao pendente (nenhum Ingress do cluster declara tls hoje e nao ha
+# cert-manager nem certResolver no Traefik do k3s). Ver pendencias.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blueprint-calendar-mcp
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: qa-blueprint-calendar-mcp-ratelimit@kubernetescrd,qa-blueprint-calendar-mcp-bodylimit@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - calendario-mcp-qa.ionflux.cloud
+      # secretName: calendario-mcp-qa-tls   # definir quando a origem do certificado for decidida
+  rules:
+    - host: calendario-mcp-qa.ionflux.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-calendar-mcp
+                port:
+                  number: 3600

@@ -39,6 +39,8 @@ replicas:
     count: 1
   - name: blueprint-calendar-frontend
     count: 1
+  - name: blueprint-calendar-mcp
+    count: 1
   - name: guia-backend
     count: 0
   - name: guia-frontend

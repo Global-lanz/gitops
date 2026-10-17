@@ -18,3 +18,12 @@ data:
   SMTP_SECURE: "false"
   SMTP_FROM: "Auth <no-reply@blueprint-auth.local>"
   BLUEPRINT_APP_URL: https://blueprint-dev.ionflux.cloud
+  # Origem permitida no CORS (nunca "*"). O navegador fala com a API pelo nginx do
+  # portal (mesma origem), entao so a propria origem do portal precisa constar.
+  CORS_ORIGIN: https://auth.blueprint-dev.ionflux.cloud
+  # Proxies cujo X-Forwarded-For o Express do auth aceita (nginx do portal e, atras dele, o
+  # Traefik: pods da rede de pods do k3s, padrao 10.42.0.0/16; o no usa 10.42.1.0/24). Sem isto
+  # req.ip e sempre o pod do nginx e os limites por IP viram um balde unico (N1 da revisao).
+  # So devolve o IP real depois do HelmChartConfig do Traefik (docs/devops/traefik-ip-real.md);
+  # ate la o IP resultante continua sendo 10.42.1.1, e o codigo deve ignorar IP privado.
+  TRUST_PROXY_CIDRS: "10.42.0.0/16"

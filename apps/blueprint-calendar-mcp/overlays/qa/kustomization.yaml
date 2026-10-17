@@ -1,0 +1,17 @@
+namespace: qa
+resources:
+  - ../../base
+  - configmap.yaml
+  - ingress.yaml
+  - middleware.yaml
+  - networkpolicy.yaml
+
+# NAO ESTA LIGADO: este app ainda nao consta em envs-overlays/qa/kustomization.yaml,
+# entao o Flux nao o enxerga. Para ligar, so depois da fase 2 (imagem publicada e
+# fase 0/1 no backend): trocar a tag abaixo e adicionar
+# ../../apps/blueprint-calendar-mcp/overlays/qa no agregador do qa, mais a linha
+# em `replicas`. A NetworkPolicy que restringe o backend do calendario ja
+# vive em apps/blueprint-calendar/base (ativa desde o proximo push, com ou sem o MCP).
+images:
+  - name: maiconlanzendorf/blueprint-calendar-mcp
+    newTag: "RC.20261017.001"

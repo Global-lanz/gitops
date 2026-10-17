@@ -1,0 +1,37 @@
+# Entrada do blueprint-calendar-backend (porta 3500) - M5 da revisao de seguranca.
+# Restringe so a ENTRADA; a saida (Postgres, blueprint-auth) nao muda, e a
+# NetworkPolicy do Postgres (label postgres-<env>-postgresql-client) e outra coisa.
+#
+# Quem chama (confirmado em leitura):
+#   - blueprint-calendar-frontend  nginx: proxy de /api/ para o backend.
+#   - blueprint-calendar-mcp       MCP (apps/blueprint-calendar-mcp, ainda nao ligado no
+#                                  agregador; o seletor de um pod que nao existe e inofensivo).
+# Nao entra o Traefik: os Ingress do calendario (overlays/*/ingress.yaml) apontam so para o
+# Service do frontend (porta 80); nenhum Ingress chega direto ao backend. Se um dia um
+# Ingress apontar para o backend, adicionar o Traefik aqui (namespace kube-system, label
+# app.kubernetes.io/name=traefik).
+# Nenhum outro app do gitops referencia blueprint-calendar-backend (grep nos manifests).
+#
+# Efeito de seguranca: so o nginx do frontend (e o MCP) conseguem enviar X-Forwarded-For ao
+# backend; um pod comprometido de outro app deixa de forjar o IP visto pelo backend, o que
+# torna aceitavel TRUST_PROXY_CIDRS=10.42.0.0/16.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: blueprint-calendar-backend-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: blueprint-calendar-backend
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: blueprint-calendar-frontend
+        - podSelector:
+            matchLabels:
+              app: blueprint-calendar-mcp
+      ports:
+        - protocol: TCP
+          port: 3500

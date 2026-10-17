@@ -1,0 +1,51 @@
+# Entrada do blueprint-auth (porta 3400): so quem de fato chama o auth.
+# Restringe apenas a ENTRADA; a saida (Postgres, SMTP) nao muda, e a
+# NetworkPolicy do Postgres (label postgres-<env>-postgresql-client) e outra
+# coisa e continua valendo.
+#
+# Quem chama (confirmado no codigo e nos ConfigMaps):
+#   - blueprint-auth-frontend  nginx do portal: proxy de /api (rotas publicas);
+#                              /api/internal e bloqueado la com `return 404`.
+#   - blueprint-calendar-backend  licenca, status do usuario, tickets de cadastro,
+#                              verify-password, avisos de seguranca (/api/internal).
+#   - blueprint-backend        proxy de login/me/senha (AUTH_BASE_URL, e o padrao
+#                              no codigo e http://blueprint-auth:3400).
+#   - guia-backend             modo AUTH_MODE=external (AUTH_BASE_URL).
+# Nao entram: Traefik (o auth nao tem Ingress), norteia, n8n, MCP (o MCP so fala
+# com o backend do calendario).
+#
+# LIMITE: NetworkPolicy e L3/L4, nao enxerga caminho. Ela NAO consegue dizer
+# "/api/internal so para o calendario": o portal precisa alcancar a porta 3400
+# para as rotas publicas, entao tambem alcancaria /api/internal se o nginx
+# falhasse. As camadas que protegem /api/internal sao (1) o `return 404` no
+# nginx do portal, (2) o x-internal-token e (3) esta politica, que impede
+# qualquer outro pod (inclusive de outro app comprometido) de chegar na porta.
+# Para isolar de verdade, o auth teria de servir /internal em outra porta
+# (ex.: 3401) -- mudanca de codigo; ai uma segunda regra liberaria 3401 so para
+# calendar-backend/blueprint-backend. Ver docs/devops/pendencias-gitops-mcp.md.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: blueprint-auth-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: blueprint-auth
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: blueprint-auth-frontend
+        - podSelector:
+            matchLabels:
+              app: blueprint-calendar-backend
+        - podSelector:
+            matchLabels:
+              app: blueprint-backend
+        - podSelector:
+            matchLabels:
+              app: guia-backend
+      ports:
+        - protocol: TCP
+          port: 3400

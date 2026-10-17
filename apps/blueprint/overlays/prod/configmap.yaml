@@ -19,3 +19,6 @@ data:
   SMTP_HOST: smtp-prod.local
   SMTP_PORT: "587"
   SMTP_FROM: blueprint@local.dev
+  # Origem permitida no CORS (nunca "*"). O frontend usa /api na mesma origem; so a
+  # propria origem do frontend precisa constar.
+  CORS_ORIGIN: https://blueprint.ionflux.cloud

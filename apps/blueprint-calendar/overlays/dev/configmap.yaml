@@ -13,3 +13,12 @@ data:
   # Portal central de login (mesmo valor que o blueprint usa em AUTH_PORTAL_URL).
   AUTH_PORTAL_URL: http://auth.blueprint-dev.ionflux.cloud
   MODULE_KEY: calendario
+  # IPs/CIDRs dos proxies cujo X-Forwarded-For e confiavel: nginx do frontend do calendario
+  # e Traefik, ambos pods da rede de pods do k3s (padrao 10.42.0.0/16; o no usa 10.42.1.0/24,
+  # confirmado em leitura). Ver docs/devops/pendencias-gitops-mcp.md: hoje o Traefik enxerga
+  # todo cliente como 10.42.1.1 (gateway cni0), entao o IP real so aparece quando a entrada
+  # preservar o IP de origem.
+  TRUST_PROXY_CIDRS: "10.42.0.0/16"
+  # Desligado no primeiro deploy (kill switch). Ligar = remover a linha ou "true" (so isso liga;
+  # qualquer outro texto desliga). Antes de ligar: pre-condicoes da revisao da fase 1.
+  PAT_ENABLED: "false"

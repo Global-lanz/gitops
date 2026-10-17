@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blueprint-calendar-mcp-config
+data:
+  PORT: "3600"
+  # Fixo; o MCP nunca aceita URL vinda de ferramenta. Inclui o prefixo global
+  # /api do backend (o health dele e /api/health). Confirmar com o backend-developer.
+  CALENDAR_API_URL: http://blueprint-calendar-backend:3500/api
+  # Validacao de Host/Origin (protecao contra DNS rebinding, secao 4 do plano).
+  # O nome da variavel e sugestao: alinhar com o que o MCP implementar.
+  MCP_ALLOWED_HOSTS: calendario-mcp-qa.ionflux.cloud
+  NODE_ENV: production

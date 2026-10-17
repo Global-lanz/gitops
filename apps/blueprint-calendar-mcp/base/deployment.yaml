@@ -1,0 +1,72 @@
+# MCP do Calendario editorial (docs/mcp-calendario.md, secao 4). Sem banco, sem
+# segredo proprio e sem volume persistente: so repassa chamadas para a REST do
+# blueprint-calendar-backend com o token do proprio usuario.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blueprint-calendar-mcp
+spec:
+  # 1 replica: o no tem 1 vCPU / 4 GB. Nao escalar sem medir.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blueprint-calendar-mcp
+  template:
+    metadata:
+      labels:
+        app: blueprint-calendar-mcp
+    spec:
+      # O MCP nao fala com a API do Kubernetes.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: blueprint-calendar-mcp
+          # A imagem ainda nao existe. O overlay de cada ambiente fixa a tag.
+          image: maiconlanzendorf/blueprint-calendar-mcp:0.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3600
+          envFrom:
+            - configMapRef:
+                name: blueprint-calendar-mcp-config
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 48Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          # Unico local gravavel (Node pode precisar de /tmp). Em memoria.
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3600
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3600
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Mi

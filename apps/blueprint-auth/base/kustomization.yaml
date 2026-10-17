@@ -3,3 +3,4 @@ resources:
   - auth-service.yaml
   - portal-deployment.yaml
   - portal-service.yaml
+  - networkpolicy.yaml

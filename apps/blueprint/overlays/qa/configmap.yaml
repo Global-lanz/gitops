@@ -25,3 +25,6 @@ data:
   CHAT_EMBED_BASE_URL: http://guia-backend:3000
   # Public origin of guia's frontend, used by the widget to build the iframe src.
   CHAT_WIDGET_URL: https://guia-qa.ionflux.cloud
+  # Origem permitida no CORS (nunca "*"). O frontend usa /api na mesma origem; so a
+  # propria origem do frontend precisa constar.
+  CORS_ORIGIN: http://blueprint-qa.ionflux.cloud
