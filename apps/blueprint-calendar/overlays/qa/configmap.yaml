@@ -21,4 +21,4 @@ data:
   TRUST_PROXY_CIDRS: "10.42.0.0/16"
   # Desligado no primeiro deploy (kill switch). Ligar = remover a linha ou "true" (so isso liga;
   # qualquer outro texto desliga). Antes de ligar: pre-condicoes da revisao da fase 1.
-  PAT_ENABLED: "false"
+  PAT_ENABLED: "true"
