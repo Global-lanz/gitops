@@ -14,4 +14,4 @@ resources:
 # vive em apps/blueprint-calendar/base (ativa desde o proximo push, com ou sem o MCP).
 images:
   - name: maiconlanzendorf/blueprint-calendar-mcp
-    newTag: "RC.20261017.002"
+    newTag: "RC.20261019.001"
