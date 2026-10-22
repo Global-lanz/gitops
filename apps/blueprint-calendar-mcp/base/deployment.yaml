@@ -27,7 +27,7 @@ spec:
       containers:
         - name: blueprint-calendar-mcp
           # Ultima versao publicada; o overlay de qa fixa a RC em teste.
-          image: maiconlanzendorf/blueprint-calendar-mcp:0.2.0
+          image: maiconlanzendorf/blueprint-calendar-mcp:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3600
