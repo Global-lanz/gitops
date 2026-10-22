@@ -86,6 +86,8 @@ spec:
                       fail=1
                     fi
                   done
+                  # O n8n (uid 1000) apaga as pastas antigas depois de subir pro Drive.
+                  chown -R 1000:1000 /backup
                   exit $fail
               resources:
                 requests:
