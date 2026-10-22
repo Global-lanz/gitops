@@ -15,6 +15,7 @@ resources:
   - ../../apps/blueprint/overlays/prod
   - ../../apps/blueprint-auth/overlays/prod
   - ../../apps/blueprint-calendar/overlays/prod
+  - ../../apps/blueprint-calendar-mcp/overlays/prod
   - ../../apps/norteia/overlays/prod
   - ../../apps/guia/overlays/prod
   - ../../apps/n8n/overlays/prod
@@ -48,6 +49,8 @@ replicas:
   - name: blueprint-calendar-backend
     count: 1
   - name: blueprint-calendar-frontend
+    count: 1
+  - name: blueprint-calendar-mcp
     count: 1
   - name: guia-backend
     count: 1

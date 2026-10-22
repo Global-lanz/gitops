@@ -1,0 +1,10 @@
+namespace: prod
+resources:
+  - ../../base
+  - configmap.yaml
+  - ingress.yaml
+  - middleware.yaml
+  - networkpolicy.yaml
+
+# Sem pin: o prod usa a tag do base (ultima versao final publicada). O MCP nao tem
+# banco, entao nao leva o label postgres-prod-postgresql-client.

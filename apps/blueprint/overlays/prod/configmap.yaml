@@ -19,6 +19,12 @@ data:
   SMTP_HOST: smtp-prod.local
   SMTP_PORT: "587"
   SMTP_FROM: blueprint@local.dev
+  MODULE_KEY: blueprint
+  # --- Chat Embed Widget (calls guia's embed-SSO endpoint server-to-server) ---
+  # Internal cluster DNS — guia-backend runs in this same prod namespace.
+  CHAT_EMBED_BASE_URL: http://guia-backend:3000
+  # Public origin of guia's frontend, used by the widget to build the iframe src.
+  CHAT_WIDGET_URL: https://guia.ionflux.cloud
   # Origem permitida no CORS (nunca "*"). O frontend usa /api na mesma origem; so a
   # propria origem do frontend precisa constar.
   CORS_ORIGIN: https://blueprint.ionflux.cloud

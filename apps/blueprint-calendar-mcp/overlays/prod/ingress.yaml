@@ -1,0 +1,22 @@
+# O Bearer bpc_ trafega neste host. O TLS termina no Traefik do Docker da VPS
+# (prod-routes.yml, certResolver mytlschallenge), que repassa em HTTP para a porta 80
+# do Traefik do k3s; por isso este Ingress usa so o entrypoint padrao, sem tls.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blueprint-calendar-mcp
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: prod-blueprint-calendar-mcp-ratelimit@kubernetescrd,prod-blueprint-calendar-mcp-bodylimit@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: mcp.calendario.ionflux.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blueprint-calendar-mcp
+                port:
+                  number: 3600

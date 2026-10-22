@@ -26,8 +26,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: blueprint-calendar-mcp
-          # A imagem ainda nao existe. O overlay de cada ambiente fixa a tag.
-          image: maiconlanzendorf/blueprint-calendar-mcp:0.0.0
+          # Ultima versao publicada; o overlay de qa fixa a RC em teste.
+          image: maiconlanzendorf/blueprint-calendar-mcp:0.2.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3600

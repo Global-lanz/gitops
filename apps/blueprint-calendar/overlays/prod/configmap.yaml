@@ -19,6 +19,5 @@ data:
   # todo cliente como 10.42.1.1 (gateway cni0), entao o IP real so aparece quando a entrada
   # preservar o IP de origem.
   TRUST_PROXY_CIDRS: "10.42.0.0/16"
-  # Desligado no primeiro deploy (kill switch). Ligar = remover a linha ou "true" (so isso liga;
-  # qualquer outro texto desliga). Antes de ligar: pre-condicoes da revisao da fase 1.
-  PAT_ENABLED: "false"
+  # Kill switch dos tokens de IA (bpc_), ligado como no qa. Desligar = "false" (so "true" liga).
+  PAT_ENABLED: "true"

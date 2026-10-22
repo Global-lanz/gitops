@@ -1,0 +1,44 @@
+# A NetworkPolicy do BACKEND do calendario (entrada so do frontend e do MCP) saiu daqui e
+# vive em apps/blueprint-calendar/base/networkpolicy.yaml: ela vale em todos os ambientes
+# independente de o MCP estar ligado.
+# MCP: entrada so do Traefik; saida so para o backend e DNS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: blueprint-calendar-mcp
+spec:
+  podSelector:
+    matchLabels:
+      app: blueprint-calendar-mcp
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+      ports:
+        - protocol: TCP
+          port: 3600
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: blueprint-calendar-backend
+      ports:
+        - protocol: TCP
+          port: 3500
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

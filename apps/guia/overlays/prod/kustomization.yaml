@@ -5,15 +5,14 @@ resources:
   - secret.enc.yaml
   - ingress.yaml
   - backend-ingress.yaml
-# Pin da versão promovida pro prod. Fica intencionalmente atrás do base (que
-# já subiu pra 1.4.0 pro dev) até ser testada em qa e promovida aqui
-# manualmente. Escopado só ao guia — não afeta outros apps que usem a mesma
-# imagem base (ex: norteia).
+# Pin da versão promovida pro prod, depois de testada em qa (1.5.0 traz o
+# embed SSO que o widget de chat do blueprint usa). Escopado só ao guia — não
+# afeta outros apps que usem a mesma imagem base (ex: norteia).
 images:
   - name: maiconlanzendorf/n8n-chat-backend
-    newTag: "1.4.0"
+    newTag: "1.5.0"
   - name: maiconlanzendorf/n8n-chat-frontend
-    newTag: "1.4.0"
+    newTag: "1.5.0"
 
 # A NetworkPolicy do postgres-prod exige este label de quem conecta
 # (allowExternal: false no HelmRelease de envs-overlays/prod). Sem ele o

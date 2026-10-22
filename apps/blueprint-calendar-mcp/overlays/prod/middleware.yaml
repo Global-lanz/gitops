@@ -1,0 +1,27 @@
+# Rate limit por IP do cliente (a borda; o limite por token fica no backend).
+# Aplicado pela anotacao do Ingress.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: blueprint-calendar-mcp-ratelimit
+spec:
+  rateLimit:
+    # ~2 req/s sustentados por IP, rajada de 30.
+    average: 120
+    period: 1m
+    burst: 30
+    sourceCriterion:
+      ipStrategy:
+        # Conta a partir da direita do X-Forwarded-For: 1 = o IP que o proxy da
+        # frente registrou. VERIFICAR qual IP o Traefik do k3s enxerga antes
+        # de confiar (ver pendencias).
+        depth: 1
+---
+# Corpo maximo de 1 MB (plano, secao 5.1) tambem na borda.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: blueprint-calendar-mcp-bodylimit
+spec:
+  buffering:
+    maxRequestBodyBytes: 1048576
