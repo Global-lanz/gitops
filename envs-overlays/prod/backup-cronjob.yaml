@@ -10,7 +10,7 @@
 #   blueprint_calendar_backend -> blueprint_calendar
 #   norteia_backend            -> norteiadb
 #   guia_backend               -> guiadb
-#   n8n                        -> n8ndb
+# (n8ndb fica fora: o n8n real roda no Docker Compose e o banco do cluster esta vazio.)
 #
 # Ao criar um banco novo em prod, adicione-o na lista SERVICES abaixo.
 #
@@ -64,7 +64,6 @@ spec:
                     blueprint_calendar_backend:blueprint_calendar
                     norteia_backend:norteiadb
                     guia_backend:guiadb
-                    n8n:n8ndb
               command: ["/bin/sh", "-c"]
               args:
                 - |
