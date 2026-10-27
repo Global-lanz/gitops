@@ -12,6 +12,6 @@ resources:
 # ../../apps/blueprint-calendar-mcp/overlays/qa no agregador do qa, mais a linha
 # em `replicas`. A NetworkPolicy que restringe o backend do calendario ja
 # vive em apps/blueprint-calendar/base (ativa desde o proximo push, com ou sem o MCP).
-images:
-  - name: maiconlanzendorf/blueprint-calendar-mcp
-    newTag: "RC.20261027.002"
+# images:
+#   - name: maiconlanzendorf/blueprint-calendar-mcp
+#     newTag: "RC.20261027.002"
