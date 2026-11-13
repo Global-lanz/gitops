@@ -59,4 +59,4 @@ replicas:
   - name: astra-api
     count: 1
   - name: astra-admin
-    count: 1
+    count: 0
