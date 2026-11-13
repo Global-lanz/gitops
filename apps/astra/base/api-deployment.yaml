@@ -52,7 +52,7 @@ spec:
             # a imagem nova com o limite antigo de 512Mi teria heap menor que hoje.
             requests:
               cpu: 100m
-              memory: 448Mi
+              memory: 512Mi
             limits:
               cpu: 750m
               memory: 640Mi
